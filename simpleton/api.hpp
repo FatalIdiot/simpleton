@@ -27,6 +27,11 @@ namespace Simpleton {
         int w, h;
     } Rect;
 
+    class Engine;
+    class Renderer;
+    class SimpleTexture;
+    class SimpleShader;
+    class SimpleMesh;
 
 
     class Renderer {
@@ -53,7 +58,6 @@ namespace Simpleton {
             void SwapBuffers();
     };
 
-    class Engine;
     typedef struct GLFWwindow GLFWwindow;
     class Inputs {
         private:
