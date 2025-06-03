@@ -3,6 +3,6 @@
 
 /game/build
 
-./GAME.exe
+/GAME.exe
 /simpleton/bin/SIMPLETON_LIB.lib
 /simpleton/bin/api.hpp
