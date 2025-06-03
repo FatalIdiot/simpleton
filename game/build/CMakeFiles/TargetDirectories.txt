@@ -1,3 +1,0 @@
-D:/Work/new/ogl/game/build/CMakeFiles/GAME.dir
-D:/Work/new/ogl/game/build/CMakeFiles/ALL_BUILD.dir
-D:/Work/new/ogl/game/build/CMakeFiles/ZERO_CHECK.dir

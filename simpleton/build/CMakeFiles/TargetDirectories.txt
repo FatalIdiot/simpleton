@@ -1,3 +1,0 @@
-D:/Work/new/ogl/simpleton/build/CMakeFiles/SIMPLETON_LIB.dir
-D:/Work/new/ogl/simpleton/build/CMakeFiles/ALL_BUILD.dir
-D:/Work/new/ogl/simpleton/build/CMakeFiles/ZERO_CHECK.dir

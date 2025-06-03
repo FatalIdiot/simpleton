@@ -8,7 +8,6 @@
 #define KEY_EVENT_REPEAT 2
 
 typedef struct GLFWwindow GLFWwindow;
-// class Renderer;
 
 namespace Simpleton {
     typedef struct Point
@@ -16,6 +15,11 @@ namespace Simpleton {
         int x;
         int y;
     } Point;
+
+    typedef struct Color 
+    {
+        float r, g, b, a;
+    } Color;
 
     typedef struct Rect 
     {
@@ -41,6 +45,9 @@ namespace Simpleton {
             void SetWireframeRendering(bool enable); // enable rendering wireframes
             void SetWindowResizable(bool setResizable);
             void SetClearColor(float r, float g, float b);
+
+            void FillRect(Color color, Rect area); // render color to area on screen
+            void DrawTexture(Rect area, SimpleTexture* texture); // draw texture to area on screen
 
             void ClearScreen();
             void SwapBuffers();
