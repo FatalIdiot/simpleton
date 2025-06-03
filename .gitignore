@@ -2,3 +2,7 @@
 /simpleton/dump
 
 /game/build
+
+./GAME.exe
+/simpleton/bin/SIMPLETON_LIB.lib
+/simpleton/bin/api.hpp

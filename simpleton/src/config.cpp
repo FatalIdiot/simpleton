@@ -4,25 +4,25 @@
 #include "config.hpp"
 
 namespace Simpleton {
-    int GetConfigString(wchar_t* buffer, int bufferSize, const WCHAR* name, const WCHAR* sectionName) {
+    int GetConfigString(char* buffer, int bufferSize, const char* name, const char* sectionName) {
         int pulledChars = GetPrivateProfileString (
             sectionName,
             name,
             NULL, 
             buffer,
             bufferSize,
-            (const WCHAR*)"./config.ini"
+            "./config.ini"
         );
 
         return pulledChars;
     }
 
-    int GetConfigInt(const WCHAR* name, const WCHAR* sectionName) {
+    int GetConfigInt(const char* name, const char* sectionName) {
         return GetPrivateProfileInt (
             sectionName,
             name,
             0,
-            (const WCHAR*)"./config.ini"
+            "./config.ini"
         );
     }
 
