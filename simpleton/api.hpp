@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <chrono>
 
 // Events for keys and mouse
 #define KEY_EVENT_RELEASE 0
@@ -10,6 +11,9 @@
 typedef struct GLFWwindow GLFWwindow;
 
 namespace Simpleton {
+    using namespace std::chrono;
+    using namespace std::literals::chrono_literals;
+
     typedef struct Point
     {
         int x;
@@ -32,7 +36,7 @@ namespace Simpleton {
     class SimpleTexture;
     class SimpleShader;
     class SimpleMesh;
-
+    class Timer;
 
     class Renderer {
         public:
@@ -144,6 +148,31 @@ namespace Simpleton {
 
             void VertexAttrib(unsigned int index, int size, int stride, const void* offset);
             void Draw();
+    };
+
+    class Timer {
+        public:
+            enum TimerState { Running, Paused, Stopped };
+
+        private:
+            time_point<steady_clock> m_StartTime; // start time after creation or Start call
+            time_point<steady_clock> m_LastElapsed; // time passed since last Elapsed call
+            duration<float> m_PassedTime; // passed time including paused periods
+            TimerState m_State; // current state of the timer
+            
+        public:
+            Timer();
+            ~Timer();
+
+            void Start();
+            void Pause();
+            void Clear(); // Stop timer
+
+            float GetPassedTime(); // get time since Start
+            float Elapsed(); // get time from last Elapsed call or from timer start
+
+            bool isRunning();
+            bool isPaused();
     };
 
     // Get data from 'config.ini' file

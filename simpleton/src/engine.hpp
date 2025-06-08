@@ -10,7 +10,7 @@
 
 namespace Simpleton {
     class Engine {
-         private:
+        private:
             bool m_IsRunning = false; // game will quit when this is false
             Renderer m_Renderer;
             Inputs m_Inputs;

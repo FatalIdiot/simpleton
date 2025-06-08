@@ -14,6 +14,9 @@ To compile, `SIMPLETON_LIB.lib` and `glfw3.lib` static libraries must be linked,
 ### All together
 Running the `build.bat` file will run both of the above.
 
+### Cleaning
+To delete all the buid data run the `clear.bat` file.
+
 # Usage
 You can find a demo in the `game` folder.
 
@@ -23,5 +26,6 @@ You can find a demo in the `game` folder.
 ### Simple Mesh
 ### Simple Texture
 ### Shader
+### Timer
 
 # API

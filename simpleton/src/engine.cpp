@@ -1,5 +1,6 @@
 #include "config.hpp"
 #include "engine.hpp"
+#include "timer.hpp"
 // #include "../ogl/ogl.h"
 
 #include "glfw3.h"
@@ -30,8 +31,12 @@ namespace Simpleton {
 
     void Engine::Run(std::function<void()> Update)  {
         printf("Starting game loop...\n");
+        Timer gameLoopTimer;
+        gameLoopTimer.Start();
         while(!m_Renderer.WindowShouldClose() && m_IsRunning)
         {
+            float deltaT = gameLoopTimer.Elapsed();
+            
             m_Renderer.ClearScreen();
 
             Update();
