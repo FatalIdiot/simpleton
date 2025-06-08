@@ -29,17 +29,17 @@ namespace Simpleton {
         m_Renderer.m_Window = NULL;
     }
 
-    void Engine::Run(std::function<void()> Update)  {
+    void Engine::Run(std::function<void(float dt)> Update)  {
         printf("Starting game loop...\n");
         Timer gameLoopTimer;
         gameLoopTimer.Start();
         while(!m_Renderer.WindowShouldClose() && m_IsRunning)
         {
             float deltaT = gameLoopTimer.Elapsed();
-            
+
             m_Renderer.ClearScreen();
 
-            Update();
+            Update(deltaT);
 
             m_Renderer.SwapBuffers();
             glfwPollEvents();

@@ -50,7 +50,7 @@ int main() {
             engine.Stop();
     };
 
-    engine.Run([]() {
+    engine.Run([](float dt) {
         // Render frame
     });
 
