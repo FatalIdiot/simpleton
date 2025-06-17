@@ -27,7 +27,7 @@ namespace Simpleton {
 
     typedef struct Rect 
     {
-        int x, y;
+        Point pos;
         int w, h;
     } Rect;
 
@@ -44,6 +44,11 @@ namespace Simpleton {
             void* m_Engine;
             std::function<void(int& width, int& height)> m_ResizeCallback = NULL; // callback functions to customize window resize result
 
+        private:
+            unsigned int m_PrimitiveVBO;
+            unsigned int m_PrimitiveVAO;
+            unsigned int m_PrimitiveShaderProgram;
+
         public:
             bool Init(void* engine, int windowWidth, int windowHeight, char* windowName);
             void Terminate();
@@ -55,8 +60,9 @@ namespace Simpleton {
             void SetWindowResizable(bool setResizable);
             void SetClearColor(float r, float g, float b);
 
-            void FillRect(Color color, Rect area); // render color to area on screen
-            void DrawTexture(Rect area, SimpleTexture* texture); // draw texture to area on screen
+            void FillTriangle(Color color, Point pos1, Point pos2, Point pos3);
+            void FillRect(Color color, Rect area);
+            void FillCircle(Color color, Point pos, int radius);
 
             void ClearScreen();
             void SwapBuffers();

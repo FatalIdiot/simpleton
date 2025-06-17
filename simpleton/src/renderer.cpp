@@ -69,7 +69,73 @@ namespace Simpleton {
     bool Renderer::Init(void* engine, int windowWidth, int windowHeight, char* windowName) {
         printf("Renderer Inputs...\n");
         m_Engine = engine;
-        return InitWindow(this, engine, windowWidth, windowHeight, windowName);
+        if(!InitWindow(this, engine, windowWidth, windowHeight, windowName)) {
+            printf("InitWindow failed!\n");
+            return false;
+        }
+
+        // Init shaders for drawing primitives
+        float primitiveVertices[9]; // Initial data for triangle is empty, populated before drawing 
+        glGenBuffers(1, &m_PrimitiveVBO);  
+        glBindBuffer(GL_ARRAY_BUFFER, m_PrimitiveVBO);  
+        glBufferData(GL_ARRAY_BUFFER, sizeof(primitiveVertices), primitiveVertices, GL_DYNAMIC_DRAW);
+
+        glGenVertexArrays(1, &m_PrimitiveVAO);  
+        glBindVertexArray(m_PrimitiveVAO);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0); 
+
+        int  shaderCompileSuccess;
+        char shaderCompileInfoLog[512];
+
+        unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER); // Create vertex shader
+        const char *vertexShaderSource = "#version 330 core\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            "void main()\n"
+            "{\n"
+            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "}\0";
+        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+        glCompileShader(vertexShader);
+        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &shaderCompileSuccess);
+        if(!shaderCompileSuccess)
+        {
+            glGetShaderInfoLog(vertexShader, 512, NULL, shaderCompileInfoLog);
+            printf("Failed to compile Vertex shader: %s\n", shaderCompileInfoLog);
+            return false;
+        }
+
+        unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER); // Create fragment shader
+        const char *fragmentShaderSource = "#version 330 core\n"
+            "out vec4 FragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+            "}\0";
+        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+        glCompileShader(fragmentShader);
+        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &shaderCompileSuccess);
+        if(!shaderCompileSuccess)
+        {
+            glGetShaderInfoLog(fragmentShader, 512, NULL, shaderCompileInfoLog);
+            printf("Failed to compile Fragment shader: %s\n", shaderCompileInfoLog);
+            return false;
+        }
+
+        m_PrimitiveShaderProgram = glCreateProgram(); // Compile shader program
+        glAttachShader(m_PrimitiveShaderProgram, vertexShader);
+        glAttachShader(m_PrimitiveShaderProgram, fragmentShader);
+        glLinkProgram(m_PrimitiveShaderProgram);
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader); 
+        glGetProgramiv(m_PrimitiveShaderProgram, GL_LINK_STATUS, &shaderCompileSuccess);
+        if(!shaderCompileSuccess) {
+            glGetProgramInfoLog(m_PrimitiveShaderProgram, 512, NULL, shaderCompileInfoLog);
+            printf("Failed to link primitive shader program: %s\n", shaderCompileInfoLog);
+            return false;
+        }
+
+        return true;
     }
 
     void Renderer::Terminate() {
@@ -98,13 +164,41 @@ namespace Simpleton {
         glClearColor(r, g, b, 1.0f);
     }
 
+    // Convert to screen space. isAxisY - to invert the Y axis, otherwise positive values go from bottom to top
+    float ConvertScreenToOglCoords(int coord, float screenSize, bool isAxisY = false) {
+        float result = (coord / screenSize) * 2.0f - 1.0f;
+        return isAxisY ? result * -1.0f : result;
+    }
+
+    void Renderer::FillTriangle(Color color, Point pos1, Point pos2, Point pos3) {
+        glBindBuffer(GL_ARRAY_BUFFER, m_PrimitiveVBO);  
+        glBindVertexArray(m_PrimitiveVAO);
+        glUseProgram(m_PrimitiveShaderProgram);
+
+        int windowW, windowH;
+        GetWindowSize(windowW, windowH);
+        float screenW = static_cast<float>(windowW);
+        float screenH = static_cast<float>(windowH);
+        float primitiveVertices[9] = {
+            ConvertScreenToOglCoords(pos1.x, screenW), ConvertScreenToOglCoords(pos1.y, screenH, true), 0.0f,
+            ConvertScreenToOglCoords(pos2.x, screenW), ConvertScreenToOglCoords(pos2.y, screenH, true), 0.0f,
+            ConvertScreenToOglCoords(pos3.x, screenW), ConvertScreenToOglCoords(pos3.y, screenH, true), 0.0f
+        }; 
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(primitiveVertices), primitiveVertices);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // TO DO
+    }
+    
     void Renderer::FillRect(Color color, Rect area) {
         // TO DO
     }
 
-    void Renderer::DrawTexture(Rect area, SimpleTexture* texture) {
+    void Renderer::FillCircle(Color color, Point pos, int radius) {
         // TO DO
     }
+
+    
 
     void Renderer::ClearScreen() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

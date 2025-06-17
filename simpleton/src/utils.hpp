@@ -14,7 +14,7 @@ namespace Simpleton {
 
     typedef struct Rect 
     {
-        int x, y;
+        Point pos;
         int w, h;
     } Rect;
 }
