@@ -62,7 +62,7 @@ namespace Simpleton {
 
             void FillTriangle(Color color, Point pos1, Point pos2, Point pos3);
             void FillRect(Color color, Rect area);
-            void FillCircle(Color color, Point pos, int radius);
+            // void FillCircle(Color color, Point pos, int radius);
 
             void ClearScreen();
             void SwapBuffers();

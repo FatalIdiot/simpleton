@@ -135,6 +135,9 @@ namespace Simpleton {
             return false;
         }
 
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
         return true;
     }
 
@@ -171,8 +174,8 @@ namespace Simpleton {
     }
 
     void Renderer::FillTriangle(Color color, Point pos1, Point pos2, Point pos3) {
-        glBindBuffer(GL_ARRAY_BUFFER, m_PrimitiveVBO);  
         glBindVertexArray(m_PrimitiveVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_PrimitiveVBO);  
         glUseProgram(m_PrimitiveShaderProgram);
 
         int windowW, windowH;
@@ -187,16 +190,18 @@ namespace Simpleton {
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(primitiveVertices), primitiveVertices);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        // TO DO
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
     }
     
     void Renderer::FillRect(Color color, Rect area) {
-        // TO DO
+        FillTriangle(color, {area.x, area.y}, {area.x + area.w, area.y}, {area.x, area.y + area.h});
+        FillTriangle(color, {area.x, area.y + area.h}, {area.x + area.w, area.y}, {area.x + area.w, area.y + area.h});
     }
 
-    void Renderer::FillCircle(Color color, Point pos, int radius) {
-        // TO DO
-    }
+    // void Renderer::FillCircle(Color color, Point pos, int radius) {
+    // }
 
     
 

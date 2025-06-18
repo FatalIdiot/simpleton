@@ -40,15 +40,7 @@ namespace Simpleton {
             m_Renderer.ClearScreen();
 
             Update(deltaT);
-
-            // test render of a triangle
-            m_Renderer.FillTriangle(
-                { 1.0f, 1.0f, 1.0f, 1.0f },
-                { 5, 800 },
-                { 400, 5 },
-                { 800, 800 }
-            );
-
+            
             m_Renderer.SwapBuffers();
             glfwPollEvents();
         }
