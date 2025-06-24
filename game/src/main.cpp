@@ -1,5 +1,4 @@
 #include <api.hpp>
-#include "game.hpp"
 
 #include <iostream>
 
@@ -8,40 +7,12 @@ int main() {
     engine.GetRenderer()->SetWindowResizable(false);
     engine.GetRenderer()->SetClearColor(0.0f, 0.0f, 0.0f);
 
-    Game.Init();
-    GameState game = GameState::get();
-
-    engine.GetInputs()->OnMouseButton = [&game] (int button, int action) {
-        short cellIndex = game.m_MouseCellPos.y * 3 + game.m_MouseCellPos.x;
-
-        // printf("State: %d, Index: %d\n", Game.GetState(), cellIndex);
-
-        switch(Game.GetState()) {
-            case GameState::Playing:
-                // Skip click if cell already filled 
-                if(Game.GetMark(cellIndex) != 0)
-                    break;
-                Game.SetMark(cellIndex, Game.GetPlayer());
-                // Check if game ends after new mark was placed
-                if(!Game.CheckGameEnded())
-                    Game.SwitchPlayer();
-                break;
-            default:
-                // Reset game on click after game ended
-                Game.Restart();
-                break;
-        }
+    engine.GetInputs()->OnMouseButton = [] (int button, int action) {
+        
     };
 
-    engine.GetInputs()->OnMouseMove = [&game, &engine] (int xpos, int ypos) {
-        int windowW, windowH;
-        engine.GetRenderer()->GetWindowSize(windowW, windowH);
-        int cellW = windowW / 3; 
-        int cellH = windowH / 3;
-        int cellX = xpos / cellW;
-        int cellY = ypos / cellH;
-        game.m_MouseCellPos = { cellX, cellY };
-        // printf("X: %d, Y: %d\n", cellX, cellY);
+    engine.GetInputs()->OnMouseMove = [&engine] (int xpos, int ypos) {
+        
     };
 
     engine.GetInputs()->OnKey = [&engine] (int key, int scancode, int action) {
@@ -50,11 +21,20 @@ int main() {
             engine.Stop();
     };
 
-    engine.Run([](float dt) {
+    engine.Run([&engine](float dt) {
         // Render frame
+        engine.GetRenderer()->FillTriangle(
+            { 1.0f, 1.0f, 1.0f, 1.0f },
+            { 0, 0 },
+            { 400, 800 },
+            { 800, 0 }
+        );
+        engine.GetRenderer()->FillRect(
+            { 1.0f, 1.0f, 1.0f, 1.0f },
+            { 50, 500, 50, 50 }
+        );
     });
 
-    Game.Quit();
     engine.Terminate();
     return 0;
 }

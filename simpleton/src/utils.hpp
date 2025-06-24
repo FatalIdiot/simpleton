@@ -1,20 +1,22 @@
 #pragma once
 
 namespace Simpleton {
-    typedef struct Point
+    template <typename T>
+    struct Point
     {
-        int x;
-        int y;
-    } Point;
+        T x, y;
+    };
 
-    typedef struct Color 
+    template <typename T>
+    struct Color
     {
-        float r, g, b, a;
-    } Color;
+        T r, g, b, a;
+    };
 
-    typedef struct Rect 
+    template <typename T>
+    struct Rect 
     {
-        int x, y;
-        int w, h;
-    } Rect;
+        T x, y;
+        T w, h;
+    };
 }

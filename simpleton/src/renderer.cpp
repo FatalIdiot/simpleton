@@ -1,7 +1,6 @@
 #include "renderer.hpp"
 #include "engine.hpp"
 
-#include <iostream>
 #include "glad/glad.h"
 #include "glfw3.h"
 
@@ -10,7 +9,7 @@ class Simpleton::Renderer;
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
                                 GLsizei length, const GLchar *message, const void *userParam)
 {
-    std::cout << "OpenGL Debug Message: " << message << std::endl;
+    printf("Init Window: %s\n", message);
 }
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -21,35 +20,12 @@ void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-bool InitWindow(Simpleton::Renderer* renderer, void* engine, int windowWidth, int windowHeight, char* windowName) {
-    std::cout << "Init Window...\n";
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-    std::cout << "Creating Window...\n";
-    renderer->m_Window = glfwCreateWindow(windowWidth, windowHeight, windowName, NULL, NULL);
-    if (renderer->m_Window == NULL)
-    {
-        glfwTerminate();
-        return false;
-    }
-
-    std::cout << "Setting current context...\n";
-    glfwMakeContextCurrent(renderer->m_Window);
-
+bool InitWindow(Simpleton::Renderer* renderer, void* engine) {
+    printf("Init Window...\n");
     // Set pointer to engine instance to access it in callbacks
     glfwSetWindowUserPointer(renderer->m_Window, reinterpret_cast<void *>(engine));
 
-    std::cout << "Init GLAD...\n";
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        return false;
-    }
-
-    // std::cout << "Setting debugs...\n";
+    // Setting debugs
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(MessageCallback, nullptr);
@@ -58,32 +34,21 @@ bool InitWindow(Simpleton::Renderer* renderer, void* engine, int windowWidth, in
     glEnable(GL_DEPTH_TEST);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glViewport(0, 0, windowWidth, windowHeight);
     glfwSetFramebufferSizeCallback(renderer->m_Window, FramebufferSizeCallback);
 
-    std::cout << "Window init done...\n";
+    printf("Window init done...\n");
     return true;
 }
 
 namespace Simpleton {
-    bool Renderer::Init(void* engine, int windowWidth, int windowHeight, char* windowName) {
-        printf("Renderer Inputs...\n");
+    bool Renderer::Init(void* engine, GLFWwindow* window) {
+        printf("Renderer Init...\n");
         m_Engine = engine;
-        if(!InitWindow(this, engine, windowWidth, windowHeight, windowName)) {
+        m_Window = window;
+        if(!InitWindow(this, engine)) {
             printf("InitWindow failed!\n");
             return false;
         }
-
-        // Init shaders for drawing primitives
-        float primitiveVertices[9]; // Initial data for triangle is empty, populated before drawing 
-        glGenBuffers(1, &m_PrimitiveVBO);  
-        glBindBuffer(GL_ARRAY_BUFFER, m_PrimitiveVBO);  
-        glBufferData(GL_ARRAY_BUFFER, sizeof(primitiveVertices), primitiveVertices, GL_DYNAMIC_DRAW);
-
-        glGenVertexArrays(1, &m_PrimitiveVAO);  
-        glBindVertexArray(m_PrimitiveVAO);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0); 
 
         int  shaderCompileSuccess;
         char shaderCompileInfoLog[512];
@@ -135,9 +100,6 @@ namespace Simpleton {
             return false;
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-
         return true;
     }
 
@@ -147,7 +109,16 @@ namespace Simpleton {
         glfwTerminate();
     }
 
-    void Renderer::GetWindowSize(int& width, int& height) {
+    template <typename T>
+    void Renderer::GetWindowSize(T& width, T& height) {
+        int w, h; 
+        glfwGetWindowSize(m_Window, &w, &h);
+        width = static_cast<T>(w);
+        height = static_cast<T>(h);
+    }
+
+    template <> // implementation for 'int', as we don't cast the type if this is the case 
+    void Renderer::GetWindowSize<int>(int& width, int& height) {
         glfwGetWindowSize(m_Window, &width, &height);
     }
 
@@ -167,38 +138,75 @@ namespace Simpleton {
         glClearColor(r, g, b, 1.0f);
     }
 
+    // Convert function for drawing primitives to screen.
     // Convert to screen space. isAxisY - to invert the Y axis, otherwise positive values go from bottom to top
-    float ConvertScreenToOglCoords(int coord, float screenSize, bool isAxisY = false) {
-        float result = (coord / screenSize) * 2.0f - 1.0f;
+    float ConvertScreenToOglCoords(int coord, int screenSize, bool isAxisY = false) {
+        float result = (static_cast<float>(coord) / static_cast<float>(screenSize)) * 2.0f - 1.0f;
         return isAxisY ? result * -1.0f : result;
     }
 
-    void Renderer::FillTriangle(Color color, Point pos1, Point pos2, Point pos3) {
-        glBindVertexArray(m_PrimitiveVAO);
-        glBindBuffer(GL_ARRAY_BUFFER, m_PrimitiveVBO);  
+    // Convert function for drawing primitives to screen.
+    // Convert an array of OpenGL coordinates to screen coordinates. Result is stored in 'outArray'.
+    void ConvertArrToOglCoords(int* array, float* outArray, int varsCount, int windowW, int windowH) {
+        for(int i = 0, row = 0; i < varsCount; i++, row++) {
+            int rowIndex = row % 3;
+            printf("\nrow index: %u\n", rowIndex);
+            switch(rowIndex) {
+                case 0: // X
+                    outArray[i] = ConvertScreenToOglCoords(array[i], windowW);
+                    break;
+                case 1: // Y
+                    outArray[i] = ConvertScreenToOglCoords(array[i], windowH, true);
+                    break;
+                default: // Z
+                    outArray[i] = static_cast<float>(array[i]);
+            }
+        }
+    }
+
+    void Renderer::FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3) {
         glUseProgram(m_PrimitiveShaderProgram);
 
         int windowW, windowH;
-        GetWindowSize(windowW, windowH);
-        float screenW = static_cast<float>(windowW);
-        float screenH = static_cast<float>(windowH);
-        float primitiveVertices[9] = {
-            ConvertScreenToOglCoords(pos1.x, screenW), ConvertScreenToOglCoords(pos1.y, screenH, true), 0.0f,
-            ConvertScreenToOglCoords(pos2.x, screenW), ConvertScreenToOglCoords(pos2.y, screenH, true), 0.0f,
-            ConvertScreenToOglCoords(pos3.x, screenW), ConvertScreenToOglCoords(pos3.y, screenH, true), 0.0f
-        }; 
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(primitiveVertices), primitiveVertices);
-
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+        GetWindowSize<int>(windowW, windowH);
+        int screenSpaceVerts[9] = {
+            pos1.x, pos1.y, 0,
+            pos2.x, pos2.y, 0,
+            pos3.x, pos3.y, 0
+        };
+        float convertedVerts[9];
+        ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, 9, windowW, windowH);
+        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, convertedVerts, sizeof(convertedVerts));
+        unsigned int attributes[] = { 3 };
+        m_PrimitiveMesh.SetAttributes(attributes, 1);
+        m_PrimitiveMesh.Draw();
     }
     
-    void Renderer::FillRect(Color color, Rect area) {
-        FillTriangle(color, {area.x, area.y}, {area.x + area.w, area.y}, {area.x, area.y + area.h});
-        FillTriangle(color, {area.x, area.y + area.h}, {area.x + area.w, area.y}, {area.x + area.w, area.y + area.h});
+    void Renderer::FillRect(Color<float> color, Rect<int> area) {
+        glUseProgram(m_PrimitiveShaderProgram);
+
+        int windowW, windowH;
+        GetWindowSize<int>(windowW, windowH);
+        int screenSpaceVerts[18] = {
+            area.x, area.y, 0,
+            area.x, area.y + area.h, 0,
+            area.x + area.w, area.y, 0,
+            area.x, area.y + area.h, 0,
+            area.x + area.w, area.y, 0,
+            area.x + area.w, area.y + area.h, 0
+        };
+        float convertedVerts[18];
+        ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, 18, windowW, windowH);
+        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, convertedVerts, sizeof(convertedVerts));
+        unsigned int attributes[] = { 3 };
+        m_PrimitiveMesh.SetAttributes(attributes, 1);
+        m_PrimitiveMesh.Draw();
     }
+
+    // void Renderer::FillRect(Color color, Rect area) {
+    //     FillTriangle(color, {area.x, area.y}, {area.x + area.w, area.y}, {area.x, area.y + area.h});
+    //     FillTriangle(color, {area.x, area.y + area.h}, {area.x + area.w, area.y}, {area.x + area.w, area.y + area.h});
+    // }
 
     // void Renderer::FillCircle(Color color, Point pos, int radius) {
     // }

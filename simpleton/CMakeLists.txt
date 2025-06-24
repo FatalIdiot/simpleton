@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.7)
 project(SIMPLETON_LIB)
 
-FILE(GLOB SIMPLETON_FILES ogl/*.cpp ogl/*.h
+FILE(GLOB SIMPLETON_FILES
     src/*.cpp src/*.h
+    src/graphics/*.cpp src/graphics/*.h
     vendor/glad/glad.c
 )
 

@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <chrono>
+#include <vector>
 
 // Events for keys and mouse
 #define KEY_EVENT_RELEASE 0
@@ -14,22 +15,24 @@ namespace Simpleton {
     using namespace std::chrono;
     using namespace std::literals::chrono_literals;
 
-    typedef struct Point
+    template <typename T>
+    struct Point
     {
-        int x;
-        int y;
-    } Point;
+        T x, y;
+    };
 
-    typedef struct Color 
+    template <typename T>
+    struct Color
     {
-        float r, g, b, a;
-    } Color;
+        T r, g, b, a;
+    };
 
-    typedef struct Rect 
+    template <typename T>
+    struct Rect 
     {
-        Point pos;
-        int w, h;
-    } Rect;
+        T x, y;
+        T w, h;
+    };
 
     class Engine;
     class Renderer;
@@ -37,6 +40,7 @@ namespace Simpleton {
     class SimpleShader;
     class SimpleMesh;
     class Timer;
+    class Mesh;
 
     class Renderer {
         public:
@@ -53,15 +57,16 @@ namespace Simpleton {
             bool Init(void* engine, int windowWidth, int windowHeight, char* windowName);
             void Terminate();
 
-            void GetWindowSize(int& width, int& height);
+            template <typename T>
+            void GetWindowSize(T& width, T& height);
 
             bool WindowShouldClose(); // return if GLFW window must be closed
             void SetWireframeRendering(bool enable); // enable rendering wireframes
             void SetWindowResizable(bool setResizable);
             void SetClearColor(float r, float g, float b);
 
-            void FillTriangle(Color color, Point pos1, Point pos2, Point pos3);
-            void FillRect(Color color, Rect area);
+            void FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3);
+            void FillRect(Color<float> color, Rect<int> area);
             // void FillCircle(Color color, Point pos, int radius);
 
             void ClearScreen();
@@ -179,6 +184,57 @@ namespace Simpleton {
 
             bool isRunning();
             bool isPaused();
+    };
+
+    enum PrimitiveTypes {
+        Points,
+        Lines,
+        LineStrip,
+        Triangles,
+        TriangleFan
+    };
+
+    typedef struct {
+        short componentCount;
+        unsigned int size;
+    } MeshAttribute;
+
+    class Mesh {
+        private:
+            PrimitiveTypes m_Type;
+            unsigned int m_VBO;
+
+            unsigned int m_VAO;
+            std::vector<MeshAttribute> m_Attributes; // attributes data is saved for recalculations
+
+            unsigned int m_DataSize;
+            unsigned int m_AttribStride;
+            PrimitiveTypes m_PrimitiveType;
+
+        public:
+            Mesh();
+            Mesh(PrimitiveTypes type, const void* data, unsigned int size);
+            ~Mesh();
+
+            // Vertex Buffer Object - must be Interleaved data
+            void SetBufferData(PrimitiveTypes type, const void* data, unsigned int size);
+
+            // Vertex Array Object
+            void SetAttributes(unsigned int* attributes, unsigned int count); // Add all attributes as array
+            void AddAttribute(short componentCount); // Add attribute to the list
+            void ClearAttributes();
+            unsigned int GetAttribCount();
+            void EnableAttribute(short index);
+            void DisableAttribute(short index);
+
+            void Bind();
+            void Unbind();
+            void Draw();
+
+            void Terminate();
+
+        private:
+            void InitMesh();
     };
 
     // Get data from 'config.ini' file

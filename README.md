@@ -21,10 +21,10 @@ To delete all the buid data run the `clear.bat` file.
 You can find a demo in the `game` folder.
 
 ### Primitives
-Engine uses a number of primitive structs:
-`Point` - has `x` and `y` members.
-`Color` - has `r`, `g`, `b`, and `a` members.
-`Rect` - has `x` and `y` to represent top-left corner of a rectangle, `w` and `h` to represent width and height.
+Engine uses a number of primitive structs:<br />
+`Point` - has `x` and `y` members.<br />
+`Color` - has `r`, `g`, `b`, and `a` members.<br />
+`Rect` - has `x` and `y` to represent top-left corner of a rectangle, `w` and `h` to represent width and height.<br />
 
 ### Rendering
 You can draw primitives with functions found in the Renderer of the engine. To do this, get the Renderer pointer in the engine instance: `engine.GetRenderer()`.
@@ -40,5 +40,22 @@ void FillRect(Color color, Rect area);
 ### Simple Texture
 ### Shader
 ### Timer
+
+### Mesh
+Provides a class to work with OpenGL Vertex Array and Vertex Buffer Objects. <br />
+When instanced, a type of primitive must be specified. Available types are `Points`, `Lines`, `LineStrip`, `Triangles` and `TriangleFan`. <br />
+Data is set by calling the `SetBufferData` method, and attributes can be specified by calling `SetAttributes` of added one by one with `AddAttribute`. <br />
+```
+    Mesh testMesh;
+    float verts[] = {
+        -0.5f, 0.5f, 0.0f,
+        0.0f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.0f
+    }; 
+    testMesh.SetBufferData(PrimitiveTypes::Triangles, verts, sizeof(verts));
+    unsigned int attributes[] = { 3 };
+    testMesh.SetAttributes(attributes, 1);
+    testMesh.Draw();
+```
 
 # API
