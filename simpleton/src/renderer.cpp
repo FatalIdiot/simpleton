@@ -4,6 +4,9 @@
 #include "glad/glad.h"
 #include "glfw3.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 class Simpleton::Renderer;
 
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
@@ -150,7 +153,6 @@ namespace Simpleton {
     void ConvertArrToOglCoords(int* array, float* outArray, int varsCount, int windowW, int windowH) {
         for(int i = 0, row = 0; i < varsCount; i++, row++) {
             int rowIndex = row % 3;
-            printf("\nrow index: %u\n", rowIndex);
             switch(rowIndex) {
                 case 0: // X
                     outArray[i] = ConvertScreenToOglCoords(array[i], windowW);
@@ -203,15 +205,42 @@ namespace Simpleton {
         m_PrimitiveMesh.Draw();
     }
 
-    // void Renderer::FillRect(Color color, Rect area) {
-    //     FillTriangle(color, {area.x, area.y}, {area.x + area.w, area.y}, {area.x, area.y + area.h});
-    //     FillTriangle(color, {area.x, area.y + area.h}, {area.x + area.w, area.y}, {area.x + area.w, area.y + area.h});
-    // }
+    void Renderer::FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount) {
+        glUseProgram(m_PrimitiveShaderProgram);
+        int* screenSpaceVerts = new int[(pointsCount + 2) * 3];
+        float* convertedVerts = new float[(pointsCount + 2) * 3];
+        int windowW, windowH;
+        GetWindowSize<int>(windowW, windowH);
 
-    // void Renderer::FillCircle(Color color, Point pos, int radius) {
-    // }
+        // First element is the center of the circle
+        screenSpaceVerts[0] = circle.x;
+        screenSpaceVerts[1] = circle.y;
+        screenSpaceVerts[2] = 0;
 
-    
+        // Set points positions
+        for(int i = 0, index = 3; i < pointsCount; i++, index += 3) {
+            float angle = 2 * static_cast<float>(M_PI) * i / pointsCount;
+            int x = static_cast<int>( circle.x + circle.radius * cos(angle) );
+            int y = static_cast<int>( circle.y + circle.radius * sin(angle) );
+            screenSpaceVerts[index] = x;
+            screenSpaceVerts[index + 1] = y;
+            screenSpaceVerts[index + 2] = 0;
+        }
+
+        // Adding another segment to close the circle
+        screenSpaceVerts[(pointsCount + 1) * 3] = screenSpaceVerts[3];
+        screenSpaceVerts[(pointsCount + 1) * 3 + 1] = screenSpaceVerts[4];
+        screenSpaceVerts[(pointsCount + 1) * 3 + 2] = screenSpaceVerts[5];
+
+        ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, (pointsCount + 2) * 3, windowW, windowH);
+        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::TriangleFan, convertedVerts, (pointsCount + 2) * 3 * sizeof(float));
+        unsigned int attributes[] = { 3 };
+        m_PrimitiveMesh.SetAttributes(attributes, 1);
+        m_PrimitiveMesh.Draw();
+
+        delete convertedVerts;
+        delete screenSpaceVerts;
+    }
 
     void Renderer::ClearScreen() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

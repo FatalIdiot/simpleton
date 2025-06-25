@@ -19,4 +19,11 @@ namespace Simpleton {
         T x, y;
         T w, h;
     };
+
+    template <typename T>
+    struct Circle
+    {
+        T x, y;
+        T radius;
+    };
 }

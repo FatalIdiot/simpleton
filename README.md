@@ -25,13 +25,17 @@ Engine uses a number of primitive structs:<br />
 `Point` - has `x` and `y` members.<br />
 `Color` - has `r`, `g`, `b`, and `a` members.<br />
 `Rect` - has `x` and `y` to represent top-left corner of a rectangle, `w` and `h` to represent width and height.<br />
+`Circle` = has `x`, `y` and `radius` fields.<br />
+All structs are templates and their fields may be any type.<br />
 
 ### Rendering
 You can draw primitives with functions found in the Renderer of the engine. To do this, get the Renderer pointer in the engine instance: `engine.GetRenderer()`.
 ```
 void FillTriangle(Color color, Point pos1, Point pos2, Point pos3);
 void FillRect(Color color, Rect area);
+void FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
 ```
+For `FillCircle` you can specify the number of points that will form the circle, default is `25`.<br />
 
 # Entities
 ### Engine

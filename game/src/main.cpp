@@ -33,6 +33,10 @@ int main() {
             { 1.0f, 1.0f, 1.0f, 1.0f },
             { 50, 500, 50, 50 }
         );
+        engine.GetRenderer()->FillCircle(
+            { 1.0f, 1.0f, 1.0f, 1.0f },
+            { 800 - 70, 500, 50 }
+        );
     });
 
     engine.Terminate();

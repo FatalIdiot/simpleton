@@ -34,6 +34,13 @@ namespace Simpleton {
         T w, h;
     };
 
+    template <typename T>
+    struct Circle
+    {
+        T x, y;
+        T radius;
+    };
+
     class Engine;
     class Renderer;
     class SimpleTexture;
@@ -67,7 +74,7 @@ namespace Simpleton {
 
             void FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3);
             void FillRect(Color<float> color, Rect<int> area);
-            // void FillCircle(Color color, Point pos, int radius);
+            void FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
 
             void ClearScreen();
             void SwapBuffers();
