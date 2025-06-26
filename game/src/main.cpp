@@ -23,6 +23,8 @@ int main() {
 
     engine.Run([&engine](float dt) {
         // Render frame
+
+        engine.GetRenderer()->SetWireframeRendering(true);
         engine.GetRenderer()->FillTriangle(
             { 1.0f, 1.0f, 1.0f, 1.0f },
             { 0, 0 },

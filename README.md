@@ -40,10 +40,16 @@ For `FillCircle` you can specify the number of points that will form the circle,
 # Entities
 ### Engine
 ### Renderer
-### Simple Mesh
 ### Simple Texture
 ### Shader
+
 ### Timer
+Timer allows to take time measurements. It has the following functions: <br />
+`Start` - starts the timer if it is new or paused. <br />
+`Pause` - to pause the timer. Time before the pause will be saved, so the timer can be paused and started multiple times with the ability to get total time passed without the time it was paused. <br />
+`Clear` - resets the timer, clearing passed time measurements and setting it as stopped. <br />
+`GetPassedTime` - get total time passed while timer was running and not paused. <br />
+`Elapsed` - get time from timer start or from the last Elapsed call. Timer must be running and not be paused for this. Returns `0.0f` as default. <br />
 
 ### Mesh
 Provides a class to work with OpenGL Vertex Array and Vertex Buffer Objects. <br />
