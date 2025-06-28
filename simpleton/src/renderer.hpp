@@ -5,6 +5,7 @@
 #include "simpleTexture.hpp"
 #include "utils.hpp"
 #include "graphics/mesh.hpp"
+#include "graphics/shader.hpp"
 
 typedef struct GLFWwindow GLFWwindow;
 
@@ -16,8 +17,8 @@ namespace Simpleton {
             std::function<void(int& width, int& height)> m_ResizeCallback = NULL; // callback functions to customize window resize result
 
         private:
-            unsigned int m_PrimitiveShaderProgram;
             Mesh m_PrimitiveMesh;
+            Shader m_PrimitiveShader;
 
         public:
             bool Init(void* engine, GLFWwindow* window);

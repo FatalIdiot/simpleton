@@ -31,17 +31,25 @@ All structs are templates and their fields may be any type.<br />
 ### Rendering
 You can draw primitives with functions found in the Renderer of the engine. To do this, get the Renderer pointer in the engine instance: `engine.GetRenderer()`.
 ```
-void FillTriangle(Color color, Point pos1, Point pos2, Point pos3);
-void FillRect(Color color, Rect area);
-void FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
+    void FillTriangle(Color color, Point pos1, Point pos2, Point pos3);
+    void FillRect(Color color, Rect area);
+    void FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
 ```
 For `FillCircle` you can specify the number of points that will form the circle, default is `25`.<br />
 
 # Entities
 ### Engine
-### Renderer
-### Simple Texture
-### Shader
+Engine entity instance must be created and initialized before usage. It is done by calling `Simpleton::Engine engine(*WINDOW WIDTH*, *WINDOW HEIGHT*, "*WINDOW NAME*");`<br />
+Game loop is defined int the `Run` method:
+```
+    engine.Run([](float dt) {
+        *GAME CODE HERE*
+    });
+```
+Game cursor can be captured inside the window using `CaptureCursor(*BOOLEAN IF THE CURSOR MUST BE CAPTURED*)`.<br />
+Along with the `Timer` class, engine also tracs of the time since it was initialized using `GetTime`, or the time can be set using `SetTime(double TIME)`. Time is measured as `double` is seconds.<br />
+To stop the game loop, call `Stop` method. <br />
+When quiting the game, `Terminate` method must be called.<br />
 
 ### Timer
 Timer allows to take time measurements. It has the following functions: <br />
@@ -54,6 +62,7 @@ Timer allows to take time measurements. It has the following functions: <br />
 ### Mesh
 Provides a class to work with OpenGL Vertex Array and Vertex Buffer Objects. <br />
 When instanced, a type of primitive must be specified. Available types are `Points`, `Lines`, `LineStrip`, `Triangles` and `TriangleFan`. <br />
+![OpenGL draw modes](https://people.eecs.ku.edu/~jrmiller/Courses/OpenGL/resources/drawArrayModes_WithEdgesAndVertices.png)
 Data is set by calling the `SetBufferData` method, and attributes can be specified by calling `SetAttributes` of added one by one with `AddAttribute`. <br />
 ```
     Mesh testMesh;
@@ -68,4 +77,7 @@ Data is set by calling the `SetBufferData` method, and attributes can be specifi
     testMesh.Draw();
 ```
 
-# API
+### Renderer
+### Simple Texture
+
+### Shader

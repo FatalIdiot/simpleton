@@ -53,55 +53,19 @@ namespace Simpleton {
             return false;
         }
 
-        int  shaderCompileSuccess;
-        char shaderCompileInfoLog[512];
-
-        unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER); // Create vertex shader
-        const char *vertexShaderSource = "#version 330 core\n"
+        m_PrimitiveShader.AddShaderSource(ShaderType::VertexShader, "#version 330 core\n"
             "layout (location = 0) in vec3 aPos;\n"
             "void main()\n"
             "{\n"
             "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-            "}\0";
-        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-        glCompileShader(vertexShader);
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &shaderCompileSuccess);
-        if(!shaderCompileSuccess)
-        {
-            glGetShaderInfoLog(vertexShader, 512, NULL, shaderCompileInfoLog);
-            printf("Failed to compile Vertex shader: %s\n", shaderCompileInfoLog);
-            return false;
-        }
-
-        unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER); // Create fragment shader
-        const char *fragmentShaderSource = "#version 330 core\n"
+            "}\0");
+        m_PrimitiveShader.AddShaderSource(ShaderType::FragmentShader, "#version 330 core\n"
             "out vec4 FragColor;\n"
             "void main()\n"
             "{\n"
             "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-            "}\0";
-        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-        glCompileShader(fragmentShader);
-        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &shaderCompileSuccess);
-        if(!shaderCompileSuccess)
-        {
-            glGetShaderInfoLog(fragmentShader, 512, NULL, shaderCompileInfoLog);
-            printf("Failed to compile Fragment shader: %s\n", shaderCompileInfoLog);
-            return false;
-        }
-
-        m_PrimitiveShaderProgram = glCreateProgram(); // Compile shader program
-        glAttachShader(m_PrimitiveShaderProgram, vertexShader);
-        glAttachShader(m_PrimitiveShaderProgram, fragmentShader);
-        glLinkProgram(m_PrimitiveShaderProgram);
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader); 
-        glGetProgramiv(m_PrimitiveShaderProgram, GL_LINK_STATUS, &shaderCompileSuccess);
-        if(!shaderCompileSuccess) {
-            glGetProgramInfoLog(m_PrimitiveShaderProgram, 512, NULL, shaderCompileInfoLog);
-            printf("Failed to link primitive shader program: %s\n", shaderCompileInfoLog);
-            return false;
-        }
+            "}\0");
+        m_PrimitiveShader.Compile();
 
         return true;
     }
@@ -167,7 +131,7 @@ namespace Simpleton {
     }
 
     void Renderer::FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3) {
-        glUseProgram(m_PrimitiveShaderProgram);
+        m_PrimitiveShader.Bind();
 
         int windowW, windowH;
         GetWindowSize<int>(windowW, windowH);
@@ -185,7 +149,7 @@ namespace Simpleton {
     }
     
     void Renderer::FillRect(Color<float> color, Rect<int> area) {
-        glUseProgram(m_PrimitiveShaderProgram);
+        m_PrimitiveShader.Bind();
 
         int windowW, windowH;
         GetWindowSize<int>(windowW, windowH);
@@ -206,7 +170,8 @@ namespace Simpleton {
     }
 
     void Renderer::FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount) {
-        glUseProgram(m_PrimitiveShaderProgram);
+        m_PrimitiveShader.Bind();
+
         int* screenSpaceVerts = new int[(pointsCount + 2) * 3];
         float* convertedVerts = new float[(pointsCount + 2) * 3];
         int windowW, windowH;

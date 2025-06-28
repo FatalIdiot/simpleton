@@ -44,9 +44,9 @@ namespace Simpleton {
     class Engine;
     class Renderer;
     class SimpleTexture;
-    class SimpleShader;
     class Timer;
     class Mesh;
+    class Shader;
 
     class Renderer {
         public:
@@ -135,22 +135,6 @@ namespace Simpleton {
             void Unbind();
     };
 
-    class SimpleShader {
-        private:
-            unsigned int m_ShaderProgId;
-
-        public:
-            SimpleShader();
-            SimpleShader(const char* vartexShader, const char* fragmentShader);
-
-            void SetUniform1i(const char* name, int i);
-            void SetUniform4f(const char* name, float x, float y, float z, float w);
-            void SetUniformMatrix4fv(const char* name, const float* value, const bool transpose);
-
-            bool CompileShader(const char* vartexShader, const char* fragmentShader);
-            void Use();
-    };
-
     class Timer {
         public:
             enum TimerState { Running, Paused, Stopped };
@@ -225,6 +209,40 @@ namespace Simpleton {
 
         private:
             void InitMesh();
+    };
+
+    enum ShaderType {
+        VertexShader,
+        FragmentShader
+    };
+
+    class Shader {
+        public:
+            Shader();
+            ~Shader();
+
+            void Terminate();
+
+        private:
+            unsigned int m_VertexShader;
+            unsigned int m_FragmentShader; 
+            unsigned int m_ShaderProgId;
+            bool m_IsValid;
+            char m_ErrorLog[512];
+
+        public:
+            bool CheckShaderValid(ShaderType type);
+            bool CheckProgramValid();
+
+            bool AddShaderSource(ShaderType type, const char* code);
+            // bool AddShaderFile(ShaderType type, const char* filePath);
+
+            bool Compile();
+
+            // set uniforms
+
+            void Bind();
+            void Unbind();
     };
 
     // Get data from 'config.ini' file
