@@ -61,9 +61,10 @@ namespace Simpleton {
             "}\0");
         m_PrimitiveShader.AddShaderSource(ShaderType::FragmentShader, "#version 330 core\n"
             "out vec4 FragColor;\n"
+            "uniform vec4 Color;\n"
             "void main()\n"
             "{\n"
-            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+            "    FragColor = Color;\n"
             "}\0");
         m_PrimitiveShader.Compile();
 
@@ -132,6 +133,7 @@ namespace Simpleton {
 
     void Renderer::FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3) {
         m_PrimitiveShader.Bind();
+        m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
 
         int windowW, windowH;
         GetWindowSize<int>(windowW, windowH);
@@ -150,6 +152,7 @@ namespace Simpleton {
     
     void Renderer::FillRect(Color<float> color, Rect<int> area) {
         m_PrimitiveShader.Bind();
+        m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
 
         int windowW, windowH;
         GetWindowSize<int>(windowW, windowH);
@@ -171,6 +174,7 @@ namespace Simpleton {
 
     void Renderer::FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount) {
         m_PrimitiveShader.Bind();
+        m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
 
         int* screenSpaceVerts = new int[(pointsCount + 2) * 3];
         float* convertedVerts = new float[(pointsCount + 2) * 3];

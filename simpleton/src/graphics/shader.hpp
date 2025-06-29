@@ -9,12 +9,6 @@ namespace Simpleton {
     };
 
     class Shader {
-        public:
-            Shader();
-            ~Shader();
-
-            void Terminate();
-
         private:
             unsigned int m_VertexShader;
             unsigned int m_FragmentShader; 
@@ -23,6 +17,9 @@ namespace Simpleton {
             char m_ErrorLog[512];
 
         public:
+            Shader();
+            ~Shader();
+
             bool CheckShaderValid(ShaderType type);
             bool CheckProgramValid();
 
@@ -32,8 +29,11 @@ namespace Simpleton {
             bool Compile();
 
             // set uniforms
+            void SetUniform(const char* name, float x, float y, float z, float w);
 
             void Bind();
             void Unbind();
+
+            void Terminate();
     };
 }
