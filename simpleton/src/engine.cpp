@@ -1,6 +1,5 @@
 #define DEBUG_MODE
 
-#include "config.hpp"
 #include "engine.hpp"
 #include "timer.hpp"
 
@@ -63,8 +62,6 @@ namespace Simpleton {
             m_IsRunning = false;
             return;
         }
-
-        GetConfigs();
 
         m_Inputs = new Inputs();
         m_Inputs->Init(this);
