@@ -24,7 +24,7 @@ namespace Simpleton {
             bool CheckProgramValid();
 
             bool AddShaderSource(ShaderType type, const char* code);
-            // bool AddShaderFile(ShaderType type, const char* filePath);
+            bool AddShaderFile(ShaderType type, const char* filePath);
 
             bool Compile();
 

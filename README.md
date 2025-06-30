@@ -1,4 +1,4 @@
-Simpleton is a Windows oriented framework for game development.
+Simpleton is a framework for game development.
 
 # Compilation
 ### Compile Simpleton
@@ -81,3 +81,30 @@ Data is set by calling the `SetBufferData` method, and attributes can be specifi
 ### Simple Texture
 
 ### Shader
+Shade class includes functionality to compile a vertex and fragment shader and compile it into a shader program.<br />
+To use it you create a Shader instance: `Shader exampleShader`. Then you pass source code for both shaders either from file or by directly providing code:
+```
+exampleShader.AddShaderFile(ShaderType::VertexShader, "file/path");
+exampleShader.AddShaderFile(ShaderType::FragmentShader, "file/path");
+
+// or
+
+exampleShader.AddShaderSource(ShaderType::VertexShader, "#version 330 core\n"
+    "layout (location = 0) in vec3 aPos;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "}\0");
+exampleShader.AddShaderSource(ShaderType::FragmentShader, "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "void main()\n"
+    "{\n"
+    "    FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
+    "}\0");
+```
+Aftere the source been provided, the shader program is compiled by calling `Compile()`.<br />
+Before the draw call you bind the program with `Bind()`, and `Unbind()` it after it's done.<br />
+Uniforms are provided into the program with following functions:
+```
+void SetUniform(const char* name, float x, float y, float z, float w);
+```

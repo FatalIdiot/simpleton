@@ -1,7 +1,5 @@
 #include <api.hpp>
 
-#include <iostream>
-
 int main() {
     Simpleton::Engine engine(800, 800, "TicTacToe");
     engine.GetRenderer()->SetWindowResizable(false);

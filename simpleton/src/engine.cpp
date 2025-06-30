@@ -1,5 +1,3 @@
-#define DEBUG_MODE
-
 #include "engine.hpp"
 #include "timer.hpp"
 
@@ -7,16 +5,21 @@
 #include <iostream>
 
 namespace Simpleton {
-    bool InitOpenGL(GLFWwindow*& window, int windowWidth, int windowHeight, char* windowName) {
+    void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
+        GLsizei length, const GLchar *message, const void *userParam)
+    {
+        printf("Init Window: %s\n", message);
+    }
+
+    bool InitOpenGL(GLFWwindow*& window, int windowWidth, int windowHeight, char* windowName, bool enableOglDebug) {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-        #ifdef DEBUG_MODE
-        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-        #endif
+        if(enableOglDebug)
+            glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
         printf("Creating Window...\n");
         window = glfwCreateWindow(windowWidth, windowHeight, windowName, NULL, NULL);
@@ -38,15 +41,23 @@ namespace Simpleton {
             return false;
         }
 
+        if(enableOglDebug) {
+            // Setting debugs
+            glEnable(GL_DEBUG_OUTPUT);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glDebugMessageCallback(MessageCallback, nullptr);
+            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+        }
+
         glViewport(0, 0, windowWidth, windowHeight);
 
         return true;
     }
 
-    Engine::Engine(int screenW, int screenH, char* title) {
+    Engine::Engine(int screenW, int screenH, char* title, bool enableOglDebug) {
         printf("Engine Init...\n");
         GLFWwindow* window;
-        bool initSuccess = InitOpenGL(window, screenW, screenH, title);
+        bool initSuccess = InitOpenGL(window, screenW, screenH, title, enableOglDebug);
         if(!initSuccess) 
         {
             printf("Failed to init OpenGL!\n");

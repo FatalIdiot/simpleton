@@ -107,7 +107,7 @@ namespace Simpleton {
             Inputs m_Inputs;
 
         public:
-            Engine(int screenW, int screenH, char* title); // init engine
+            Engine(int screenW, int screenH, char* title, bool enableOglDebug = false); // init engine
             void Terminate(); // kill engine
 
             void Run(std::function<void(float dt)> Update); // start game loop, lambda function will be called each frame
@@ -235,7 +235,7 @@ namespace Simpleton {
             bool CheckProgramValid();
 
             bool AddShaderSource(ShaderType type, const char* code);
-            // bool AddShaderFile(ShaderType type, const char* filePath);
+            bool AddShaderFile(ShaderType type, const char* filePath);
 
             bool Compile();
 

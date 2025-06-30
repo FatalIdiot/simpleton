@@ -1,6 +1,9 @@
 #include "shader.hpp"
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+// #include <string>
 
 namespace Simpleton {
     Shader::Shader() {
@@ -54,6 +57,21 @@ namespace Simpleton {
         }
 
         return true;
+    }
+
+    bool Shader::AddShaderFile(ShaderType type, const char* filePath) {
+        std::ifstream file(filePath);
+        if (!file.is_open()) {
+            printf("Error opening shader file: %s\n", filePath);
+            return false;
+        }
+
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+
+        file.close();
+
+        return AddShaderSource(type, buffer.str().c_str());
     }
 
     bool Shader::Compile() {

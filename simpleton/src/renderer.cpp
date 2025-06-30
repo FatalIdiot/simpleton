@@ -9,12 +9,6 @@
 
 class Simpleton::Renderer;
 
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
-                                GLsizei length, const GLchar *message, const void *userParam)
-{
-    printf("Init Window: %s\n", message);
-}
-
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     Simpleton::Engine* engine = reinterpret_cast<Simpleton::Engine*>(glfwGetWindowUserPointer(window));
@@ -27,12 +21,6 @@ bool InitWindow(Simpleton::Renderer* renderer, void* engine) {
     printf("Init Window...\n");
     // Set pointer to engine instance to access it in callbacks
     glfwSetWindowUserPointer(renderer->m_Window, reinterpret_cast<void *>(engine));
-
-    // Setting debugs
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(MessageCallback, nullptr);
-    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
     glEnable(GL_DEPTH_TEST);
 
