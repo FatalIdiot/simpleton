@@ -84,6 +84,10 @@ namespace Simpleton {
         m_IsRunning = true;
     }
 
+    Engine::~Engine() {
+        Terminate();
+    }
+
     void Engine::Terminate() {
         printf("Engine Terminate...\n");
         m_Renderer->Terminate();

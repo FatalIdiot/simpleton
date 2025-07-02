@@ -36,7 +36,6 @@ int main() {
             { 800 - 70, 500, 50 }
         );
     });
-
-    engine.Terminate();
+    
     return 0;
 }
