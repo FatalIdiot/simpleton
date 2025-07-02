@@ -1,5 +1,16 @@
 Simpleton is a framework for game development.
 
+# Contents
+- [Primitives](#primitives)
+- [Rendering](#rendering)
+Entities:
+- [Engine](#engine)
+- [Timer](#timer)
+- [Mesh](#mesh)
+- [Renderer](#renderer)
+- [Shader](#shader)
+- [Shader Uniform Manager](#shader-uniform-manager)
+
 # Compilation
 ### Compile Simpleton
 To compile Simpleton run the `build_engine.bat` file.
@@ -78,7 +89,6 @@ Data is set by calling the `SetBufferData` method, and attributes can be specifi
 ```
 
 ### Renderer
-### Simple Texture
 
 ### Shader
 Shade class includes functionality to compile a vertex and fragment shader and compile it into a shader program.<br />
