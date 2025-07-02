@@ -75,6 +75,16 @@ To stop the game loop, call `Stop` method. <br />
 When quiting the game, `Terminate` method must be called.<br />
 
 ### Timer
+
+**Methods:**
+- `Start()` - starts the timer
+- `Pause()` - pauses the timer
+- `Stop()` - stops the timer
+- `GetPassedTime()` - returns a `float` of time in seconds that passed since Start without pauses
+- `Elapsed()` - return time since last pause or start, with paused time
+- `isRunning()` - check if the timer is running
+- `isPaused()` - check if the timer is paused
+
 Timer allows to take time measurements. It has the following functions: <br />
 `Start` - starts the timer if it is new or paused. <br />
 `Pause` - to pause the timer. Time before the pause will be saved, so the timer can be paused and started multiple times with the ability to get total time passed without the time it was paused. <br />
@@ -83,6 +93,17 @@ Timer allows to take time measurements. It has the following functions: <br />
 `Elapsed` - get time from timer start or from the last Elapsed call. Timer must be running and not be paused for this. Returns `0.0f` as default. <br />
 
 ### Mesh
+
+**Methods:**
+- `SetBufferData(PrimitiveTypes type, const void* data, unsigned int size)`
+- `SetAttributes(unsigned int* attributes, unsigned int count)`
+- `AddAttribute(short componentCount)`
+- `ClearAttributes()`
+- `GetAttribCount()`
+- `EnableAttribute(short index)` | `DisableAttribute(short index)`
+- `Bind()` | `Unbind()`
+- `Draw()`
+
 Provides a class to work with OpenGL Vertex Array and Vertex Buffer Objects. <br />
 When instanced, a type of primitive must be specified. Available types are `Points`, `Lines`, `LineStrip`, `Triangles` and `TriangleFan`. <br />
 ![OpenGL draw modes](https://people.eecs.ku.edu/~jrmiller/Courses/OpenGL/resources/drawArrayModes_WithEdgesAndVertices.png)
@@ -103,6 +124,15 @@ Data is set by calling the `SetBufferData` method, and attributes can be specifi
 ### Renderer
 
 ### Shader
+
+**Methods:**
+- `CheckProgramValid()`
+- `AddShaderSource(ShaderType type, const char* code)`
+- `AddShaderFile(ShaderType type, const char* filePath)`
+- `Compile()`
+- `SetUniform(const char* name, float x, float y, float z, float w)`
+- `Bind()` | `Unbind()`
+
 Shade class includes functionality to compile a vertex and fragment shader and compile it into a shader program.<br />
 To use it you create a Shader instance: `Shader exampleShader`. Then you pass source code for both shaders either from file or by directly providing code:
 ```
@@ -138,5 +168,13 @@ Shaders have global uniforms, that are passed to them before drawing by the engi
 > These values are set by the static method `SetData` of the static `ShaderUniformManager` class when the `Draw` method of `Mesh` is called.
 
 ### Shader Uniform Manager
+
+**Methods:**
+- `SetEngine(Engine* engine)`
+- `SetData()`
+
+> [!WARNING]
+> This class and all it's methods are static.
+
 This class controls uniforms, that must be present in all shaders. It is a static class, that has a pointer to the Engine, since multiple Engine instances may be used in the code. The pointer is set with `SetEngine` static method, that is called in the Engine constructor. It can be called from game's code if needed. <br />
 It works by calling the `SetData` static method inside the `Mesh.Draw()`, to pass data right before a draw call. The data is set for the currently active shader program. The `SetData` method is public and can be called at any place if needed. <br />

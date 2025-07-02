@@ -49,9 +49,8 @@ namespace Simpleton {
             void Unbind();
             void Draw();
 
-            void Terminate();
-
         private:
             void InitMesh();
+            void Terminate();
     };
 }

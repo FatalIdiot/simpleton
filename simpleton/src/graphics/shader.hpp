@@ -20,7 +20,6 @@ namespace Simpleton {
             Shader();
             ~Shader();
 
-            bool CheckShaderValid(ShaderType type);
             bool CheckProgramValid();
 
             bool AddShaderSource(ShaderType type, const char* code);
@@ -34,6 +33,8 @@ namespace Simpleton {
             void Bind();
             void Unbind();
 
+        private:
+            bool CheckShaderValid(ShaderType type);
             void Terminate();
     };
 }

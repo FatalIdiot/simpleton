@@ -206,10 +206,9 @@ namespace Simpleton {
             void Unbind();
             void Draw();
 
-            void Terminate();
-
         private:
             void InitMesh();
+            void Terminate();
     };
 
     enum ShaderType {
@@ -218,12 +217,6 @@ namespace Simpleton {
     };
 
     class Shader {
-        public:
-            Shader();
-            ~Shader();
-
-            void Terminate();
-
         private:
             unsigned int m_VertexShader;
             unsigned int m_FragmentShader; 
@@ -232,7 +225,9 @@ namespace Simpleton {
             char m_ErrorLog[512];
 
         public:
-            bool CheckShaderValid(ShaderType type);
+            Shader();
+            ~Shader();
+
             bool CheckProgramValid();
 
             bool AddShaderSource(ShaderType type, const char* code);
@@ -241,9 +236,14 @@ namespace Simpleton {
             bool Compile();
 
             // set uniforms
+            void SetUniform(const char* name, float x, float y, float z, float w);
 
             void Bind();
             void Unbind();
+
+        private:
+            bool CheckShaderValid(ShaderType type);
+            void Terminate();
     };
 
     class ShaderUniformManager {
