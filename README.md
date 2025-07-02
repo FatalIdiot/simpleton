@@ -3,7 +3,7 @@ Simpleton is a framework for game development.
 # Contents
 **Usage:** <br />
 - [Primitives](#primitives)
-- [Rendering](#rendering) <br />
+- [Rendering](#rendering)
 **Entities:**<br />
 - [Engine](#engine)
 - [Timer](#timer)
