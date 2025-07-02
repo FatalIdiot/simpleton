@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "glad/glad.h"
+
 namespace Simpleton {
     Shader::Shader() {
         m_VertexShader = glCreateShader(GL_VERTEX_SHADER);

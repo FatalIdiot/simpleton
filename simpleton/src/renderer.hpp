@@ -10,7 +10,11 @@
 typedef struct GLFWwindow GLFWwindow;
 
 namespace Simpleton {    
+    class Engine;
+
     class Renderer {
+        friend class Engine; 
+        
         public:
             GLFWwindow* m_Window;
             void* m_Engine;
@@ -22,7 +26,6 @@ namespace Simpleton {
 
         public:
             bool Init(void* engine, GLFWwindow* window);
-            void Terminate();
 
             template <typename T>
             void GetWindowSize(T& width, T& height);
@@ -38,5 +41,8 @@ namespace Simpleton {
 
             void ClearScreen();
             void SwapBuffers();
+
+        private:
+            void Terminate();
     };
 }

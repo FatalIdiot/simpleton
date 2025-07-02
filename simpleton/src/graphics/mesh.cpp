@@ -1,6 +1,8 @@
 #include "mesh.hpp"
 #include "shaderUniformManager.hpp"
 
+#include "glad/glad.h"
+
 namespace Simpleton {
     void Mesh::InitMesh()
     {

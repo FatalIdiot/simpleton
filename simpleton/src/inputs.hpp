@@ -11,6 +11,8 @@ namespace Simpleton {
     class Engine;
 
     class Inputs {
+        friend class Engine; 
+
         private:
             Engine* m_Engine = nullptr;
             int m_MouseX = 0, m_MouseY = 0;
@@ -22,11 +24,11 @@ namespace Simpleton {
 
         public:
             void Init(Engine* engine);
-            void Terminate();
 
         private:
             static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
             static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
             static void MousePositionCallback(GLFWwindow* window, double xpos, double ypos);
+            void Terminate();
     };
 }

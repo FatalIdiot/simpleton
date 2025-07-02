@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine.hpp"
+// class Engine;
 
 namespace Simpleton {
     class ShaderUniformManager {

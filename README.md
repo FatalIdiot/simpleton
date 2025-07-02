@@ -8,8 +8,9 @@ Simpleton is a framework for game development.
 **Entities:** <br />
 + [Engine](#engine)
 + [Timer](#timer)
-+ [Mesh](#mesh)
++ [Inputs](#inputs)
 + [Renderer](#renderer)
++ [Mesh](#mesh)
 + [Shader](#shader)
 + [Shader Uniform Manager](#shader-uniform-manager)<br />
 
@@ -92,6 +93,10 @@ Timer allows to take time measurements. It has the following functions: <br />
 `GetPassedTime` - get total time passed while timer was running and not paused. <br />
 `Elapsed` - get time from timer start or from the last Elapsed call. Timer must be running and not be paused for this. Returns `0.0f` as default. <br />
 
+### Inputs
+
+### Renderer
+
 ### Mesh
 
 **Methods:**
@@ -120,8 +125,6 @@ Data is set by calling the `SetBufferData` method, and attributes can be specifi
     testMesh.SetAttributes(attributes, 1);
     testMesh.Draw();
 ```
-
-### Renderer
 
 ### Shader
 
