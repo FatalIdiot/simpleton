@@ -3,14 +3,15 @@ Simpleton is a framework for game development.
 # Contents
 **Usage:** <br />
 - [Primitives](#primitives)
-- [Rendering](#rendering)
-**Entities:**<br />
+- [Rendering](#rendering) <br />
+
+**Entities:** <br />
 + [Engine](#engine)
 + [Timer](#timer)
 + [Mesh](#mesh)
 + [Renderer](#renderer)
 + [Shader](#shader)
-+ [Shader Uniform Manager](#shader-uniform-manager)
++ [Shader Uniform Manager](#shader-uniform-manager)<br />
 
 # Compilation
 ### Compile Simpleton
