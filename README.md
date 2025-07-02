@@ -52,6 +52,16 @@ For `FillCircle` you can specify the number of points that will form the circle,
 
 # Entities
 ### Engine
+
+**Methods:**
+- `Run(std::function<void(float dt)> Update)` - defines the game loop
+- `GetRenderer()` - returns a pointer to the Renderer instance
+- `GetInputs()` - returns a pointer to the Inputs instance
+- `CaptureCursor(bool setCapture)` - captures the cursor inside the window
+- `GetTime()` - returns a `double` of time in seconds
+- `SetTime(double time)` - set the time in seconds
+- `Stop()` - stops the engine
+
 Engine entity instance must be created and initialized before usage. It is done by calling `Simpleton::Engine engine(*WINDOW WIDTH*, *WINDOW HEIGHT*, "*WINDOW NAME*");`<br />
 Game loop is defined int the `Run` method:
 ```
