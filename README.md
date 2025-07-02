@@ -108,3 +108,13 @@ Uniforms are provided into the program with following functions:
 ```
 void SetUniform(const char* name, float x, float y, float z, float w);
 ```
+<br />
+Shaders have global uniforms, that are passed to them before drawing by the engine. These are: <br />
+`screenSize` - two `int` values that return screen width (`screenSize.x`) and screen height (`screenSize.y`). <br />
+
+> [!TIP]
+> These values are set by the static method `SetData` of the static `ShaderUniformManager` class when the `Draw` method of `Mesh` is called.
+
+### Shader Uniform Manager
+This class controls uniforms, that must be present in all shaders. It is a static class, that has a pointer to the Engine, since multiple Engine instances may be used in the code. The pointer is set with `SetEngine` static method, that is called in the Engine constructor. It can be called from game's code if needed. <br />
+It works by calling the `SetData` static method inside the `Mesh.Draw()`, to pass data right before a draw call. The data is set for the currently active shader program. The `SetData` method is public and can be called at any place if needed. <br />

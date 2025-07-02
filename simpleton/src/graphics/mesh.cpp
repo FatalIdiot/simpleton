@@ -1,4 +1,5 @@
 #include "mesh.hpp"
+#include "shaderUniformManager.hpp"
 
 namespace Simpleton {
     void Mesh::InitMesh()
@@ -127,6 +128,10 @@ namespace Simpleton {
 
     void Mesh::Draw() {
         Bind();
+
+        // Set global uniforms for current shader
+        ShaderUniformManager::SetData();
+
         // Since in Interleaped data stride equals vertex data size, 
         // we can calculate number of elements based on entire buffer size and stride
         glDrawArrays(GetOpenGlType(m_Type), 0, m_DataSize / m_AttribStride);

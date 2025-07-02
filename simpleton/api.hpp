@@ -47,6 +47,7 @@ namespace Simpleton {
     class Timer;
     class Mesh;
     class Shader;
+    class ShaderUniformManager;
 
     class Renderer {
         public:
@@ -245,7 +246,19 @@ namespace Simpleton {
             void Unbind();
     };
 
-    // Get data from 'config.ini' file
-    int GetConfigString(char* buffer, int bufferSize, const char* name, const char* sectionName = "Config");
-    int GetConfigInt(const char* name, const char* sectionName = "Config");
+    class ShaderUniformManager {
+        private:
+            static Engine* m_Engine;
+
+        private:
+            ShaderUniformManager() = delete;
+
+        public:
+            // Sets engine pointer to get data from.
+            // This is because there might be multiple instances of Engine.
+            static void SetEngine(Engine* engine);
+
+            // Sets global uniforms to the current shader program.
+            static void SetData();
+    };
 }

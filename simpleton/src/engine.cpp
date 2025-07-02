@@ -1,5 +1,6 @@
 #include "engine.hpp"
 #include "timer.hpp"
+#include "graphics/shaderUniformManager.hpp"
 
 #include "glfw3.h"
 #include <iostream>
@@ -76,6 +77,8 @@ namespace Simpleton {
 
         m_Inputs = new Inputs();
         m_Inputs->Init(this);
+
+        ShaderUniformManager::SetEngine(this);
 
         printf("Engine Init done...\n");
         m_IsRunning = true;
