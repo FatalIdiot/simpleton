@@ -1,9 +1,10 @@
 Simpleton is a framework for game development.
 
 # Contents
+**Usage:** <br />
 - [Primitives](#primitives)
-- [Rendering](#rendering)
-Entities:
+- [Rendering](#rendering) <br />
+**Entities:**<br />
 - [Engine](#engine)
 - [Timer](#timer)
 - [Mesh](#mesh)
