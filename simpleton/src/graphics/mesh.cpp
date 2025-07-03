@@ -55,24 +55,9 @@ namespace Simpleton {
         m_DataSize = size;
     }
 
-    // void Mesh::SetAttributes(unsigned int* attributes, unsigned int count) {
-    //     ClearAttributes();
-    //     // Calculate stride
-    //     for(unsigned int i = 0; i < count; i++) {
-    //         m_AttribStride += attributes[i] * sizeof(float);
-    //     }
-
-    //     int offset = 0;
-    //     for(unsigned int i = 0; i < count; i++) {
-    //         glVertexAttribPointer(i, attributes[i], GL_FLOAT, GL_FALSE, m_AttribStride, (void*)offset);
-    //         glEnableVertexAttribArray(i); 
-
-    //         offset += attributes[i] * sizeof(float);
-    //     }
-    // }
-
     void Mesh::SetAttributes(MeshAttribute attributes[], unsigned int count) {
         ClearAttributes();
+        
         // Calculate stride
         for(unsigned int i = 0; i < count; i++) {
             m_AttribStride += attributes[i].count * GetTypeSize(attributes[i].type);
