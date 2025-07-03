@@ -133,8 +133,12 @@ namespace Simpleton {
         float convertedVerts[9];
         ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, 9, windowW, windowH);
         m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, convertedVerts, sizeof(convertedVerts));
-        unsigned int attributes[] = { 3 };
+        
+        MeshAttribute attributes[] = {
+            { GL_FLOAT, 3, false }
+        };
         m_PrimitiveMesh.SetAttributes(attributes, 1);
+
         m_PrimitiveMesh.Draw();
     }
     
@@ -155,8 +159,12 @@ namespace Simpleton {
         float convertedVerts[18];
         ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, 18, windowW, windowH);
         m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, convertedVerts, sizeof(convertedVerts));
-        unsigned int attributes[] = { 3 };
+        
+        MeshAttribute attributes[] = {
+            { GL_FLOAT, 3, false }
+        };
         m_PrimitiveMesh.SetAttributes(attributes, 1);
+
         m_PrimitiveMesh.Draw();
     }
 
@@ -191,8 +199,12 @@ namespace Simpleton {
 
         ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, (pointsCount + 2) * 3, windowW, windowH);
         m_PrimitiveMesh.SetBufferData(PrimitiveTypes::TriangleFan, convertedVerts, (pointsCount + 2) * 3 * sizeof(float));
-        unsigned int attributes[] = { 3 };
+        
+        MeshAttribute attributes[] = {
+            { GL_FLOAT, 3, false }
+        };
         m_PrimitiveMesh.SetAttributes(attributes, 1);
+
         m_PrimitiveMesh.Draw();
 
         delete convertedVerts;

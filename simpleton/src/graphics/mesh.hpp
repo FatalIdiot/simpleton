@@ -12,8 +12,9 @@ namespace Simpleton {
     };
 
     typedef struct {
-        short componentCount;
-        unsigned int size;
+        unsigned int type; // OpenGL type of data
+        unsigned int count;
+        bool normalized;
     } MeshAttribute;
 
     class Mesh {
@@ -37,8 +38,8 @@ namespace Simpleton {
             void SetBufferData(PrimitiveTypes type, const void* data, unsigned int size);
 
             // Vertex Array Object
-            void SetAttributes(unsigned int* attributes, unsigned int count); // Add all attributes as array
-            void AddAttribute(short componentCount); // Add attribute to the list
+            void SetAttributes(MeshAttribute attributes[], unsigned int count); // Add all attributes as array
+            void AddAttribute(MeshAttribute newAttribute); // Add attribute to the list
             void ClearAttributes();
             unsigned int GetAttribCount();
             void EnableAttribute(short index);
@@ -50,6 +51,7 @@ namespace Simpleton {
 
         private:
             void InitMesh();
+            static unsigned int GetTypeSize(unsigned int type);
             void Terminate();
     };
 }

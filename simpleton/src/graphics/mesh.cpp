@@ -12,6 +12,19 @@ namespace Simpleton {
         m_AttribStride = 0;
     }
 
+    unsigned int Mesh::GetTypeSize(unsigned int type) {
+        switch(type) {
+            case GL_BYTE:               return sizeof(bool);
+            case GL_UNSIGNED_BYTE:      return sizeof(unsigned bool);
+            case GL_SHORT:              return sizeof(short);
+            case GL_UNSIGNED_SHORT:     return sizeof(unsigned short);
+            case GL_INT:                return sizeof(int);
+            case GL_UNSIGNED_INT:       return sizeof(unsigned int);
+            case GL_FLOAT:              return sizeof(float);
+            default:                    return 4;
+        }
+    }
+
     void Mesh::Terminate() {
         glDeleteVertexArrays(1, &m_VAO);
         glDeleteBuffers(1, &m_VBO);
@@ -42,41 +55,60 @@ namespace Simpleton {
         m_DataSize = size;
     }
 
-    void Mesh::SetAttributes(unsigned int* attributes, unsigned int count) {
+    // void Mesh::SetAttributes(unsigned int* attributes, unsigned int count) {
+    //     ClearAttributes();
+    //     // Calculate stride
+    //     for(unsigned int i = 0; i < count; i++) {
+    //         m_AttribStride += attributes[i] * sizeof(float);
+    //     }
+
+    //     int offset = 0;
+    //     for(unsigned int i = 0; i < count; i++) {
+    //         glVertexAttribPointer(i, attributes[i], GL_FLOAT, GL_FALSE, m_AttribStride, (void*)offset);
+    //         glEnableVertexAttribArray(i); 
+
+    //         offset += attributes[i] * sizeof(float);
+    //     }
+    // }
+
+    void Mesh::SetAttributes(MeshAttribute attributes[], unsigned int count) {
         ClearAttributes();
         // Calculate stride
         for(unsigned int i = 0; i < count; i++) {
-            m_AttribStride += attributes[i] * sizeof(float);
+            m_AttribStride += attributes[i].count * GetTypeSize(attributes[i].type);
         }
 
         int offset = 0;
         for(unsigned int i = 0; i < count; i++) {
-            glVertexAttribPointer(i, attributes[i], GL_FLOAT, GL_FALSE, m_AttribStride, (void*)offset);
+            glVertexAttribPointer(i, attributes[i].count, attributes[i].type, attributes[i].normalized ? GL_TRUE : GL_FALSE, 
+                m_AttribStride, (void*)offset);
             glEnableVertexAttribArray(i); 
 
-            offset += attributes[i] * sizeof(float);
+            offset += attributes[i].count * GetTypeSize(attributes[i].type);
         }
     }
 
-    void Mesh::AddAttribute(short componentCount) {
+    void Mesh::AddAttribute(MeshAttribute newAttribute) {
         glBindVertexArray(m_VAO);
 
         short attribIndex = GetAttribCount();
 
-        unsigned int attributeSize = componentCount * sizeof(float);
+        unsigned int attributeSize = newAttribute.count * GetTypeSize(newAttribute.type);
         m_AttribStride += attributeSize;
 
-        // Update sride in other attributes
+        // Update stride in other attributes
         unsigned int offset = 0;
         for (int i = 0; i < m_Attributes.size(); i++) {
-            glVertexAttribPointer(i, m_Attributes[i].componentCount, GL_FLOAT, GL_FALSE, m_AttribStride, (void*)offset);
-            offset += m_Attributes[i].size;
+            glVertexAttribPointer(i, m_Attributes[i].count, m_Attributes[i].type, m_Attributes[i].normalized ? GL_TRUE : GL_FALSE, 
+                m_AttribStride, (void*)offset);
+            offset += m_Attributes[i].count * GetTypeSize(m_Attributes[i].type);
         }
 
-        glVertexAttribPointer(attribIndex, componentCount, GL_FLOAT, GL_FALSE, m_AttribStride, (void*)offset);
+        glVertexAttribPointer(attribIndex, newAttribute.count, newAttribute.type, newAttribute.normalized ? GL_TRUE : GL_FALSE, 
+            m_AttribStride, (void*)offset);
         glEnableVertexAttribArray(attribIndex); 
 
-        m_Attributes.push_back({ componentCount, attributeSize });
+        m_Attributes.push_back(newAttribute);
 
     }
 
