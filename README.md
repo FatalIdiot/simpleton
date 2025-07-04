@@ -101,8 +101,8 @@ Timer allows to take time measurements. It has the following functions: <br />
 
 **Methods:**
 - `SetBufferData(PrimitiveTypes type, const void* data, unsigned int size)`
-- `SetAttributes(unsigned int* attributes, unsigned int count)`
-- `AddAttribute(short componentCount)`
+- `SetAttributes(MeshAttribute attributes[], unsigned int count)`
+- `AddAttribute(MeshAttribute newAttribute)`
 - `ClearAttributes()`
 - `GetAttribCount()`
 - `EnableAttribute(short index)` | `DisableAttribute(short index)`
@@ -110,18 +110,25 @@ Timer allows to take time measurements. It has the following functions: <br />
 - `Draw()`
 
 Provides a class to work with OpenGL Vertex Array and Vertex Buffer Objects. <br />
+It uses the `MeshAttribute` struct to contain attribute's `type`, `count` and `normalized` values. <br />
+
+> [!TIP]
+> This class is used to abstract away OpenGL rendering for the engine, but also can be used directly in game code. For this you must understand how OpenGL VBOs and VAOs work, the data structure must be Interleaved.
+
 When instanced, a type of primitive must be specified. Available types are `Points`, `Lines`, `LineStrip`, `Triangles` and `TriangleFan`. <br />
 ![OpenGL draw modes](https://people.eecs.ku.edu/~jrmiller/Courses/OpenGL/resources/drawArrayModes_WithEdgesAndVertices.png)
 Data is set by calling the `SetBufferData` method, and attributes can be specified by calling `SetAttributes` of added one by one with `AddAttribute`. <br />
 ```
     Mesh testMesh;
     float verts[] = {
-        -0.5f, 0.5f, 0.0f,
-        0.0f, 0.0f, 0.0f,
-        0.5f, 0.5f, 0.0f
+        -0.5f, 0.5f,
+        0.0f, 0.0f,
+        0.5f, 0.5f
     }; 
     testMesh.SetBufferData(PrimitiveTypes::Triangles, verts, sizeof(verts));
-    unsigned int attributes[] = { 3 };
+    MeshAttribute attributes[] = {
+            { GL_FLOAT, 2, true }
+        };
     testMesh.SetAttributes(attributes, 1);
     testMesh.Draw();
 ```
@@ -136,7 +143,8 @@ Data is set by calling the `SetBufferData` method, and attributes can be specifi
 - `SetUniform(const char* name, float x, float y, float z, float w)`
 - `Bind()` | `Unbind()`
 
-Shade class includes functionality to compile a vertex and fragment shader and compile it into a shader program.<br />
+Provides a class to work with OpenGL shaders and shader programs. <br />
+Shader class includes functionality to compile a vertex and fragment shader and compile it into a shader program.<br />
 To use it you create a Shader instance: `Shader exampleShader`. Then you pass source code for both shaders either from file or by directly providing code:
 ```
 exampleShader.AddShaderFile(ShaderType::VertexShader, "file/path");
