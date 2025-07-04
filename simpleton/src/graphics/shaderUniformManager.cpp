@@ -17,7 +17,7 @@ namespace Simpleton {
         ShaderUniformManager::m_Engine->GetRenderer()->GetWindowSize(screenW, screenH);
 
         glUniform2i(
-            glGetUniformLocation(currentShader, "screenSize"), 
+            glGetUniformLocation(currentShader, "ScreenSize"), 
             screenW, screenH
         );
     }

@@ -43,9 +43,14 @@ namespace Simpleton {
 
         m_PrimitiveShader.AddShaderSource(ShaderType::VertexShader, "#version 330 core\n"
             "layout (location = 0) in vec3 aPos;\n"
+            "uniform ivec2 ScreenSize;\n"
             "void main()\n"
             "{\n"
-            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "    gl_Position = vec4(\n"
+            "        (aPos.x / ScreenSize.x) * 2.0 - 1.0,\n"
+            "        ((aPos.y / ScreenSize.y) * 2.0 - 1.0) * -1,\n"
+            "        0.0, 1.0\n"
+            "    );\n"
             "}\0");
         m_PrimitiveShader.AddShaderSource(ShaderType::FragmentShader, "#version 330 core\n"
             "out vec4 FragColor;\n"
@@ -94,48 +99,18 @@ namespace Simpleton {
         glClearColor(r, g, b, 1.0f);
     }
 
-    // Convert function for drawing primitives to screen.
-    // Convert to screen space. isAxisY - to invert the Y axis, otherwise positive values go from bottom to top
-    float ConvertScreenToOglCoords(int coord, int screenSize, bool isAxisY = false) {
-        float result = (static_cast<float>(coord) / static_cast<float>(screenSize)) * 2.0f - 1.0f;
-        return isAxisY ? result * -1.0f : result;
-    }
-
-    // Convert function for drawing primitives to screen.
-    // Convert an array of OpenGL coordinates to screen coordinates. Result is stored in 'outArray'.
-    void ConvertArrToOglCoords(int* array, float* outArray, int varsCount, int windowW, int windowH) {
-        for(int i = 0, row = 0; i < varsCount; i++, row++) {
-            int rowIndex = row % 3;
-            switch(rowIndex) {
-                case 0: // X
-                    outArray[i] = ConvertScreenToOglCoords(array[i], windowW);
-                    break;
-                case 1: // Y
-                    outArray[i] = ConvertScreenToOglCoords(array[i], windowH, true);
-                    break;
-                default: // Z
-                    outArray[i] = static_cast<float>(array[i]);
-            }
-        }
-    }
-
     void Renderer::FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3) {
         m_PrimitiveShader.Bind();
         m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
 
-        int windowW, windowH;
-        GetWindowSize<int>(windowW, windowH);
-        int screenSpaceVerts[9] = {
-            pos1.x, pos1.y, 0,
-            pos2.x, pos2.y, 0,
-            pos3.x, pos3.y, 0
+        int screenSpaceVerts[6] = {
+            pos1.x, pos1.y,
+            pos2.x, pos2.y,
+            pos3.x, pos3.y
         };
-        float convertedVerts[9];
-        ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, 9, windowW, windowH);
-        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, convertedVerts, sizeof(convertedVerts));
-        
+        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, screenSpaceVerts, sizeof(screenSpaceVerts));
         MeshAttribute attributes[] = {
-            { GL_FLOAT, 3, false }
+            { GL_INT, 2 }
         };
         m_PrimitiveMesh.SetAttributes(attributes, 1);
 
@@ -146,22 +121,18 @@ namespace Simpleton {
         m_PrimitiveShader.Bind();
         m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
 
-        int windowW, windowH;
-        GetWindowSize<int>(windowW, windowH);
-        int screenSpaceVerts[18] = {
-            area.x, area.y, 0,
-            area.x, area.y + area.h, 0,
-            area.x + area.w, area.y, 0,
-            area.x, area.y + area.h, 0,
-            area.x + area.w, area.y, 0,
-            area.x + area.w, area.y + area.h, 0
+        int screenSpaceVerts[12] = {
+            area.x, area.y,
+            area.x, area.y + area.h,
+            area.x + area.w, area.y,
+            area.x, area.y + area.h,
+            area.x + area.w, area.y,
+            area.x + area.w, area.y + area.h
         };
-        float convertedVerts[18];
-        ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, 18, windowW, windowH);
-        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, convertedVerts, sizeof(convertedVerts));
+        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, screenSpaceVerts, sizeof(screenSpaceVerts));
         
         MeshAttribute attributes[] = {
-            { GL_FLOAT, 3, false }
+            { GL_INT, 2 }
         };
         m_PrimitiveMesh.SetAttributes(attributes, 1);
 
@@ -172,42 +143,34 @@ namespace Simpleton {
         m_PrimitiveShader.Bind();
         m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
 
-        int* screenSpaceVerts = new int[(pointsCount + 2) * 3];
-        float* convertedVerts = new float[(pointsCount + 2) * 3];
-        int windowW, windowH;
-        GetWindowSize<int>(windowW, windowH);
+        int* screenSpaceVerts = new int[(pointsCount + 2) * 2];
 
         // First element is the center of the circle
         screenSpaceVerts[0] = circle.x;
         screenSpaceVerts[1] = circle.y;
-        screenSpaceVerts[2] = 0;
 
         // Set points positions
-        for(int i = 0, index = 3; i < pointsCount; i++, index += 3) {
+        for(int i = 0, index = 2; i < pointsCount; i++, index += 2) {
             float angle = 2 * static_cast<float>(M_PI) * i / pointsCount;
             int x = static_cast<int>( circle.x + circle.radius * cos(angle) );
             int y = static_cast<int>( circle.y + circle.radius * sin(angle) );
             screenSpaceVerts[index] = x;
             screenSpaceVerts[index + 1] = y;
-            screenSpaceVerts[index + 2] = 0;
         }
 
         // Adding another segment to close the circle
-        screenSpaceVerts[(pointsCount + 1) * 3] = screenSpaceVerts[3];
-        screenSpaceVerts[(pointsCount + 1) * 3 + 1] = screenSpaceVerts[4];
-        screenSpaceVerts[(pointsCount + 1) * 3 + 2] = screenSpaceVerts[5];
+        screenSpaceVerts[(pointsCount + 1) * 2] = screenSpaceVerts[2];
+        screenSpaceVerts[(pointsCount + 1) * 2 + 1] = screenSpaceVerts[3];
 
-        ConvertArrToOglCoords(screenSpaceVerts, convertedVerts, (pointsCount + 2) * 3, windowW, windowH);
-        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::TriangleFan, convertedVerts, (pointsCount + 2) * 3 * sizeof(float));
+        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::TriangleFan, screenSpaceVerts, (pointsCount + 2) * 2 * sizeof(int));
         
         MeshAttribute attributes[] = {
-            { GL_FLOAT, 3, false }
+            { GL_INT, 2 }
         };
         m_PrimitiveMesh.SetAttributes(attributes, 1);
 
         m_PrimitiveMesh.Draw();
 
-        delete convertedVerts;
         delete screenSpaceVerts;
     }
 

@@ -11,11 +11,11 @@ namespace Simpleton {
         TriangleFan
     };
 
-    typedef struct {
+    struct MeshAttribute {
         unsigned int type; // OpenGL type of data
         unsigned int count;
-        bool normalized;
-    } MeshAttribute;
+        bool normalized = false;
+    };
 
     class Mesh {
         private:
