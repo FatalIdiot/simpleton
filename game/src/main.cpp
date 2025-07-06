@@ -1,7 +1,7 @@
 #include <api.hpp>
 
 int main() {
-    Simpleton::Engine engine(800, 800, "TicTacToe");
+    Simpleton::Engine engine(800, 800, "TicTacToe", Simpleton::EngineFlags::EnableOglDebug);
     engine.GetRenderer()->SetWindowResizable(false);
     engine.GetRenderer()->SetClearColor(0.0f, 0.0f, 0.0f);
 

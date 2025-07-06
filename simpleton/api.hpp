@@ -195,6 +195,11 @@ namespace Simpleton {
             void Terminate();
     };
 
+    enum EngineFlags {
+        None = 0,
+        EnableOglDebug = 1 << 0
+    };
+
     class Engine {
          private:
             bool m_IsRunning = false; // game will quit when this is false
@@ -202,7 +207,7 @@ namespace Simpleton {
             Inputs m_Inputs;
 
         public:
-            Engine(int screenW, int screenH, char* title, bool enableOglDebug = false); // init engine
+            Engine(int screenW, int screenH, char* title, EngineFlags flags = EngineFlags::None); // init engine
             ~Engine(); // kill engine in destructor
             void Terminate(); // manually kill engine
 

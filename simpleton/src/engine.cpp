@@ -12,14 +12,14 @@ namespace Simpleton {
         printf("Init Window: %s\n", message);
     }
 
-    bool InitOpenGL(GLFWwindow*& window, int windowWidth, int windowHeight, char* windowName, bool enableOglDebug) {
+    bool InitOpenGL(GLFWwindow*& window, int windowWidth, int windowHeight, char* windowName, EngineFlags flags) {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-        if(enableOglDebug)
+        if(flags & EngineFlags::EnableOglDebug)
             glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
         printf("Creating Window...\n");
@@ -42,8 +42,9 @@ namespace Simpleton {
             return false;
         }
 
-        if(enableOglDebug) {
-            // Setting debugs
+        if(flags & EngineFlags::EnableOglDebug) {
+            printf("OpenGL debuging enabled.\n");
+            
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
             glDebugMessageCallback(MessageCallback, nullptr);
@@ -55,10 +56,10 @@ namespace Simpleton {
         return true;
     }
 
-    Engine::Engine(int screenW, int screenH, char* title, bool enableOglDebug) {
+    Engine::Engine(int screenW, int screenH, char* title, EngineFlags flags) {
         printf("Engine Init...\n");
         GLFWwindow* window;
-        bool initSuccess = InitOpenGL(window, screenW, screenH, title, enableOglDebug);
+        bool initSuccess = InitOpenGL(window, screenW, screenH, title, flags);
         if(!initSuccess) 
         {
             printf("Failed to init OpenGL!\n");
