@@ -29,7 +29,7 @@ namespace Simpleton {
             void SetBufferData(unsigned int type, const void* data, unsigned int size);
 
             // Vertex Array Object
-            void SetAttributes(MeshAttribute attributes[], unsigned int count); // Add all attributes as array
+            void SetAttributes(MeshAttribute attributes[], short count); // Add all attributes as array
             void AddAttribute(MeshAttribute newAttribute); // Add attribute to the list
             void ClearAttributes();
             unsigned int GetAttribCount();
