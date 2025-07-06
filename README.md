@@ -97,6 +97,22 @@ Timer allows to take time measurements. It has the following functions: <br />
 
 ### Renderer
 
+**Methods:**
+- `GetWindowSize(T& width, T& height)` - template function, that returns screen size
+- `WindowShouldClose()` - returns `bool` that is true if the window must be closed, if so - breaks the engine game loop
+- `SetWireframeRendering(bool enable)` - if enabled, OpenGL will render the wireframe, instead of primitives and models
+- `SetWindowResizable(bool setResizable)` - toogles if the window should be resizable or not
+- `SetClearColor(float r, float g, float b)` - at the beginning of each frame, the screen is cleared with this color
+- `FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3)`
+- `FillRect(Color<float> color, Rect<int> area)`
+- `FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25)`
+
+Renderer class is an abstraction above OpenGL, that is set to allow drawing primitives, textures and models.<br />
+When using Simpleton, you can get the Renderer instance from the Engine object: `engine.GetRenderer()`, this will give a Renderer pointer.<br />
+**Rendering:** <br />
+Primitives are rendered using the following methods: <br />
+`FillTriangle`, `FillRect`, `FillCircle`. All of them take a `Color` as the first parameter, and then relevant data of the primitive. For circle rendering, the number of points that form the circle may be specified, default value, if nothing is specified, is `25`. <br />
+
 ### Mesh
 
 **Methods:**

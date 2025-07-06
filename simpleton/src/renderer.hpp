@@ -25,8 +25,6 @@ namespace Simpleton {
             Shader m_PrimitiveShader;
 
         public:
-            bool Init(void* engine, GLFWwindow* window);
-
             template <typename T>
             void GetWindowSize(T& width, T& height);
 
@@ -39,10 +37,10 @@ namespace Simpleton {
             void FillRect(Color<float> color, Rect<int> area);
             void FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
 
+        private:
+            bool Init(void* engine, GLFWwindow* window);
+            void Terminate();
             void ClearScreen();
             void SwapBuffers();
-
-        private:
-            void Terminate();
     };
 }

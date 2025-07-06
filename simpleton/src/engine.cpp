@@ -51,10 +51,6 @@ namespace Simpleton {
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
 
-        if(flags & EngineFlags::TestFlag) {
-            printf("TEST FLAG ENABLED\n");
-        }
-
         glViewport(0, 0, windowWidth, windowHeight);
 
         return true;
