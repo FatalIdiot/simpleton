@@ -108,7 +108,7 @@ namespace Simpleton {
             pos2.x, pos2.y,
             pos3.x, pos3.y
         };
-        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, screenSpaceVerts, sizeof(screenSpaceVerts));
+        m_PrimitiveMesh.SetBufferData(GL_TRIANGLES, screenSpaceVerts, sizeof(screenSpaceVerts));
         MeshAttribute attributes[] = {
             { GL_INT, 2 }
         };
@@ -129,7 +129,7 @@ namespace Simpleton {
             area.x + area.w, area.y,
             area.x + area.w, area.y + area.h
         };
-        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::Triangles, screenSpaceVerts, sizeof(screenSpaceVerts));
+        m_PrimitiveMesh.SetBufferData(GL_TRIANGLES, screenSpaceVerts, sizeof(screenSpaceVerts));
         
         MeshAttribute attributes[] = {
             { GL_INT, 2 }
@@ -162,7 +162,7 @@ namespace Simpleton {
         screenSpaceVerts[(pointsCount + 1) * 2] = screenSpaceVerts[2];
         screenSpaceVerts[(pointsCount + 1) * 2 + 1] = screenSpaceVerts[3];
 
-        m_PrimitiveMesh.SetBufferData(PrimitiveTypes::TriangleFan, screenSpaceVerts, (pointsCount + 2) * 2 * sizeof(int));
+        m_PrimitiveMesh.SetBufferData(GL_TRIANGLE_FAN, screenSpaceVerts, (pointsCount + 2) * 2 * sizeof(int));
         
         MeshAttribute attributes[] = {
             { GL_INT, 2 }

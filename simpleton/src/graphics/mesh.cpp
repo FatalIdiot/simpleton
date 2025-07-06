@@ -34,7 +34,7 @@ namespace Simpleton {
         InitMesh();
     }
 
-    Mesh::Mesh(PrimitiveTypes type, const void* data, unsigned int size) {
+    Mesh::Mesh(unsigned int type, const void* data, unsigned int size) {
         InitMesh();
         SetBufferData(type, data, size);
     }
@@ -43,7 +43,7 @@ namespace Simpleton {
         Terminate();
     }
 
-    void Mesh::SetBufferData(PrimitiveTypes type, const void* data, unsigned int size) {
+    void Mesh::SetBufferData(unsigned int type, const void* data, unsigned int size) {
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);  
         m_Type = type;
         if(size == m_DataSize) {
@@ -130,21 +130,6 @@ namespace Simpleton {
         glBindVertexArray(0);
     }
 
-    int GetOpenGlType(PrimitiveTypes type) {
-        switch(type) {
-            case PrimitiveTypes::Points:
-                return GL_POINTS;
-            case PrimitiveTypes::Lines:
-                return GL_LINES;
-            case PrimitiveTypes::LineStrip:
-                return GL_LINE_STRIP;
-            case PrimitiveTypes::TriangleFan:
-                return GL_TRIANGLE_FAN;
-            default:
-                return GL_TRIANGLES;
-        }
-    }
-
     void Mesh::Draw() {
         Bind();
 
@@ -153,7 +138,7 @@ namespace Simpleton {
 
         // Since in Interleaped data stride equals vertex data size, 
         // we can calculate number of elements based on entire buffer size and stride
-        glDrawArrays(GetOpenGlType(m_Type), 0, m_DataSize / m_AttribStride);
+        glDrawArrays(m_Type, 0, m_DataSize / m_AttribStride);
         Unbind();
     }
 }

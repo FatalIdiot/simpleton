@@ -3,14 +3,6 @@
 #include <vector>
 
 namespace Simpleton {
-    enum PrimitiveTypes {
-        Points,
-        Lines,
-        LineStrip,
-        Triangles,
-        TriangleFan
-    };
-
     struct MeshAttribute {
         unsigned int type; // OpenGL type of data
         unsigned int count;
@@ -19,7 +11,7 @@ namespace Simpleton {
 
     class Mesh {
         private:
-            PrimitiveTypes m_Type;
+            unsigned int m_Type;
             unsigned int m_VBO;
 
             unsigned int m_VAO;
@@ -27,15 +19,14 @@ namespace Simpleton {
 
             unsigned int m_DataSize;
             unsigned int m_AttribStride;
-            PrimitiveTypes m_PrimitiveType;
 
         public:
             Mesh();
-            Mesh(PrimitiveTypes type, const void* data, unsigned int size);
+            Mesh(unsigned int type, const void* data, unsigned int size);
             ~Mesh();
 
             // Vertex Buffer Object - must be Interleaved data
-            void SetBufferData(PrimitiveTypes type, const void* data, unsigned int size);
+            void SetBufferData(unsigned int type, const void* data, unsigned int size);
 
             // Vertex Array Object
             void SetAttributes(MeshAttribute attributes[], unsigned int count); // Add all attributes as array

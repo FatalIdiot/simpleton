@@ -9,15 +9,6 @@
 #define KEY_EVENT_PRESS 1
 #define KEY_EVENT_REPEAT 2
 
-// OpenGL types to use in Mesh attributes
-#define GL_BYTE 0x1400
-#define GL_UNSIGNED_BYTE 0x1401
-#define GL_SHORT 0x1402
-#define GL_UNSIGNED_SHORT 0x1403
-#define GL_INT 0x1404
-#define GL_UNSIGNED_INT 0x1405
-#define GL_FLOAT 0x1406
-
 typedef struct GLFWwindow GLFWwindow;
 
 namespace Simpleton {
@@ -52,13 +43,6 @@ namespace Simpleton {
 
     
 
-    enum PrimitiveTypes {
-        Points,
-        Lines,
-        LineStrip,
-        Triangles,
-        TriangleFan
-    };
 
     typedef struct {
         unsigned int type; // OpenGL type of data
@@ -68,7 +52,7 @@ namespace Simpleton {
 
     class Mesh {
         private:
-            PrimitiveTypes m_Type;
+            unsigned int m_Type;
             unsigned int m_VBO;
 
             unsigned int m_VAO;
@@ -76,15 +60,14 @@ namespace Simpleton {
 
             unsigned int m_DataSize;
             unsigned int m_AttribStride;
-            PrimitiveTypes m_PrimitiveType;
 
         public:
             Mesh();
-            Mesh(PrimitiveTypes type, const void* data, unsigned int size);
+            Mesh(unsigned int type, const void* data, unsigned int size);
             ~Mesh();
 
             // Vertex Buffer Object - must be Interleaved data
-            void SetBufferData(PrimitiveTypes type, const void* data, unsigned int size);
+            void SetBufferData(unsigned int type, const void* data, unsigned int size);
 
             // Vertex Array Object
             void SetAttributes(MeshAttribute attributes[], unsigned int count); // Add all attributes as array

@@ -116,7 +116,7 @@ Primitives are rendered using the following methods: <br />
 ### Mesh
 
 **Methods:**
-- `SetBufferData(PrimitiveTypes type, const void* data, unsigned int size)`
+- `SetBufferData(unsigned int type, const void* data, unsigned int size)`
 - `SetAttributes(MeshAttribute attributes[], unsigned int count)`
 - `AddAttribute(MeshAttribute newAttribute)`
 - `ClearAttributes()`
@@ -131,7 +131,7 @@ It uses the `MeshAttribute` struct to contain attribute's `type`, `count` and `n
 > [!TIP]
 > This class is used to abstract away OpenGL rendering for the engine, but also can be used directly in game code. For this you must understand how OpenGL VBOs and VAOs work, the data structure must be Interleaved.
 
-When instanced, a type of primitive must be specified. Available types are `Points`, `Lines`, `LineStrip`, `Triangles` and `TriangleFan`. <br />
+When instanced, an OpenGL type of primitive must be specified. Available types are `GL_POINTS`, `GL_LINES`, `GL_LINE_STRIP`, `GL_TRIANGLES` and `GL_TRIANGLE_FAN`. <br />
 ![OpenGL draw modes](https://people.eecs.ku.edu/~jrmiller/Courses/OpenGL/resources/drawArrayModes_WithEdgesAndVertices.png)
 Data is set by calling the `SetBufferData` method, and attributes can be specified by calling `SetAttributes` of added one by one with `AddAttribute`. <br />
 ```
