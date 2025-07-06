@@ -12,7 +12,7 @@ namespace Simpleton {
         printf("Init Window: %s\n", message);
     }
 
-    bool InitOpenGL(GLFWwindow*& window, int windowWidth, int windowHeight, char* windowName, EngineFlags flags) {
+    bool InitOpenGL(GLFWwindow*& window, int windowWidth, int windowHeight, char* windowName, unsigned int flags) {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -51,12 +51,16 @@ namespace Simpleton {
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
 
+        if(flags & EngineFlags::TestFlag) {
+            printf("TEST FLAG ENABLED\n");
+        }
+
         glViewport(0, 0, windowWidth, windowHeight);
 
         return true;
     }
 
-    Engine::Engine(int screenW, int screenH, char* title, EngineFlags flags) {
+    Engine::Engine(int screenW, int screenH, char* title, unsigned int flags) {
         printf("Engine Init...\n");
         GLFWwindow* window;
         bool initSuccess = InitOpenGL(window, screenW, screenH, title, flags);

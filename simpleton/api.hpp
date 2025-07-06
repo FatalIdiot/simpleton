@@ -195,8 +195,7 @@ namespace Simpleton {
             void Terminate();
     };
 
-    enum EngineFlags {
-        None = 0,
+    enum EngineFlags : unsigned int {
         EnableOglDebug = 1 << 0
     };
 
@@ -207,7 +206,7 @@ namespace Simpleton {
             Inputs m_Inputs;
 
         public:
-            Engine(int screenW, int screenH, char* title, EngineFlags flags = EngineFlags::None); // init engine
+            Engine(int screenW, int screenH, char* title, unsigned int flags = 0); // init engine
             ~Engine(); // kill engine in destructor
             void Terminate(); // manually kill engine
 
