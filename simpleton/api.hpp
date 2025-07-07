@@ -58,7 +58,10 @@ namespace Simpleton {
             unsigned int m_VAO;
             std::vector<MeshAttribute> m_Attributes; // attributes data is saved for recalculations
 
+            unsigned int m_EBO;
+
             unsigned int m_DataSize;
+            unsigned int m_IndexCount;
             unsigned int m_AttribStride;
 
         public:
@@ -70,15 +73,18 @@ namespace Simpleton {
             void SetBufferData(unsigned int type, const void* data, unsigned int size);
 
             // Vertex Array Object
-            void SetAttributes(MeshAttribute attributes[], unsigned int count); // Add all attributes as array
+            void SetAttributes(MeshAttribute attributes[], short count); // Add all attributes as array
             void AddAttribute(MeshAttribute newAttribute); // Add attribute to the list
             void ClearAttributes();
             unsigned int GetAttribCount();
             void EnableAttribute(short index);
             void DisableAttribute(short index);
 
+            // Element Buffer Object
+            void SetIndexData(unsigned int* data, unsigned int count);
+            void RemoveIndexData();
+
             void Bind();
-            void Unbind();
             void Draw();
 
         private:
@@ -203,18 +209,18 @@ namespace Simpleton {
             void Stop(); // set m_isRunning to false
     };
 
-    class SimpleTexture {
-        public:
-            unsigned int m_TextureId;
-            int m_Width, m_Height, m_Channels;
-            unsigned char* m_Data;
+    // class SimpleTexture {
+    //     public:
+    //         unsigned int m_TextureId;
+    //         int m_Width, m_Height, m_Channels;
+    //         unsigned char* m_Data;
 
-        public:
-            SimpleTexture(const char* texturePath, bool flip, bool genMipmaps = true);
+    //     public:
+    //         SimpleTexture(const char* texturePath, bool flip, bool genMipmaps = true);
 
-            void Bind(unsigned short slot);
-            void Unbind();
-    };
+    //         void Bind(unsigned short slot);
+    //         void Unbind();
+    // };
 
     class Timer {
         public:

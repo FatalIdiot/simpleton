@@ -28,6 +28,9 @@ namespace Simpleton {
     void Mesh::Terminate() {
         glDeleteVertexArrays(1, &m_VAO);
         glDeleteBuffers(1, &m_VBO);
+
+        if(m_EBO != 0)
+            glDeleteBuffers(1, &m_EBO);
     }
 
     Mesh::Mesh() {
@@ -44,6 +47,7 @@ namespace Simpleton {
     }
 
     void Mesh::SetBufferData(unsigned int type, const void* data, unsigned int size) {
+        glBindVertexArray(m_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);  
         m_Type = type;
         if(size == m_DataSize) {
@@ -122,13 +126,32 @@ namespace Simpleton {
     }
 
     void Mesh::Bind() {
-        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
         glBindVertexArray(m_VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+        if(m_EBO != 0)
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     }
 
-    void Mesh::Unbind() {
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+    void Mesh::SetIndexData(unsigned int* data, unsigned int count) {
+        glBindVertexArray(m_VAO);
+        if(m_EBO == 0)
+            glGenBuffers(1, &m_EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * count, data, GL_STATIC_DRAW); 
+        m_IndexCount = count;
+    }
+
+    void Mesh::RemoveIndexData() {
+        if(m_EBO == 0)
+            return;
+        int currentEBO;
+        glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &currentEBO);
+        if(m_EBO == static_cast<unsigned int>(currentEBO))
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        glDeleteBuffers(1, &m_EBO);
+        m_EBO = 0;
+        m_IndexCount = 0;
     }
 
     void Mesh::Draw() {
@@ -137,9 +160,12 @@ namespace Simpleton {
         // Set global uniforms for current shader
         ShaderUniformManager::SetData();
 
-        // Since in Interleaped data stride equals vertex data size, 
-        // we can calculate number of elements based on entire buffer size and stride
-        glDrawArrays(m_Type, 0, m_DataSize / m_AttribStride);
-        Unbind();
+        if(m_EBO != 0) { // If EBO is set we draw with EBO
+            glDrawElements(m_Type, m_IndexCount, GL_UNSIGNED_INT, 0);
+        } else {
+            // Since in Interleaped data stride equals vertex data size, 
+            // we can calculate number of elements based on entire buffer size and stride
+            glDrawArrays(m_Type, 0, m_DataSize / m_AttribStride);
+        }
     }
 }

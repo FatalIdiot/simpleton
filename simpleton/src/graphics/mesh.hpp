@@ -17,7 +17,10 @@ namespace Simpleton {
             unsigned int m_VAO;
             std::vector<MeshAttribute> m_Attributes; // attributes data is saved for recalculations
 
+            unsigned int m_EBO;
+
             unsigned int m_DataSize;
+            unsigned int m_IndexCount;
             unsigned int m_AttribStride;
 
         public:
@@ -36,8 +39,11 @@ namespace Simpleton {
             void EnableAttribute(short index);
             void DisableAttribute(short index);
 
+            // Element Buffer Object
+            void SetIndexData(unsigned int* data, unsigned int count);
+            void RemoveIndexData();
+
             void Bind();
-            void Unbind();
             void Draw();
 
         private:

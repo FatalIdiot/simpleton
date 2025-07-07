@@ -114,6 +114,8 @@ namespace Simpleton {
         };
         m_PrimitiveMesh.SetAttributes(attributes, 1);
 
+        // We draw triangle primitives with VBOs, so make sure EBO data is not set
+        m_PrimitiveMesh.RemoveIndexData();
         m_PrimitiveMesh.Draw();
     }
     
@@ -122,15 +124,18 @@ namespace Simpleton {
         m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
 
         int screenSpaceVerts[12] = {
-            area.x, area.y,
-            area.x, area.y + area.h,
-            area.x + area.w, area.y,
-            area.x, area.y + area.h,
-            area.x + area.w, area.y,
-            area.x + area.w, area.y + area.h
+            area.x, area.y, // left top
+            area.x, area.y + area.h, // left bottom
+            area.x + area.w, area.y, // right top
+            area.x + area.w, area.y + area.h // right bottom
         };
         m_PrimitiveMesh.SetBufferData(GL_TRIANGLES, screenSpaceVerts, sizeof(screenSpaceVerts));
         
+        unsigned int indexes[6] = {
+            0, 1, 2, 1, 2, 3
+        };
+        m_PrimitiveMesh.SetIndexData(indexes, 6);
+
         MeshAttribute attributes[] = {
             { GL_INT, 2 }
         };
@@ -168,6 +173,9 @@ namespace Simpleton {
             { GL_INT, 2 }
         };
         m_PrimitiveMesh.SetAttributes(attributes, 1);
+
+        // We draw circle primitives with VBOs, using GL_TRIANGLE_FAN, so make sure EBO data is not set
+        m_PrimitiveMesh.RemoveIndexData();
 
         m_PrimitiveMesh.Draw();
 
