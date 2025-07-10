@@ -8,6 +8,8 @@ namespace Simpleton {
     void Texture::Init(unsigned char slot) {
         glGenTextures(1, &m_TextureId);
         m_Slot = slot;
+        m_FilteringMode = GL_LINEAR;
+        m_isLoaded = false;
     }
 
     Texture::Texture(unsigned char slot) {
@@ -38,6 +40,10 @@ namespace Simpleton {
         return m_TextureId;
     }
 
+    bool Texture::IsLoaded() {
+        return m_isLoaded;
+    }
+
     void Texture::SetSlot(unsigned char slot) {
         m_Slot = slot;
 
@@ -50,8 +56,23 @@ namespace Simpleton {
         }
     }
 
+    void Texture::GeneralLoad() {
+        Bind();
+        
+        int mipmapLevel = 0;
+        unsigned int colorFormat = (m_ChannelsCount == 3 ? GL_RGB : GL_RGBA);
+
+        unsigned char alignment = m_ChannelsCount == 3 ? 1 : 4;
+        glPixelStorei(GL_UNPACK_ALIGNMENT, alignment);
+        glPixelStorei(GL_PACK_ALIGNMENT, alignment);
+        
+        glTexImage2D(GL_TEXTURE_2D, mipmapLevel, colorFormat, m_Width, m_Height, 0, colorFormat, GL_UNSIGNED_BYTE, m_Data);
+        
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+
     bool Texture::LoadFile(const char* filePath) {
-        unsigned char *m_Data = stbi_load(filePath, &m_Width, &m_Height, &m_ChannelsCount, 0); 
+        m_Data = stbi_load(filePath, &m_Width, &m_Height, &m_ChannelsCount, 0); 
 
         if(!m_Data) {
             printf("Failed to load texture data!\n");
@@ -61,16 +82,11 @@ namespace Simpleton {
 
         m_LoadType = TextureLoadType::File;
 
-        Bind();
-
-        int mipmapLevel = 0;
-        unsigned int colorFormat = (m_ChannelsCount == 3 ? GL_RGB : GL_RGBA);
-
-        glTexImage2D(GL_TEXTURE_2D, mipmapLevel, colorFormat, m_Width, m_Height, 0, colorFormat, GL_UNSIGNED_BYTE, m_Data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        GeneralLoad();
 
         printf("Loaded texture %u from file: %s\n", m_TextureId, filePath);
         printf("Width: %u, Height: %u, Channels: %u\n", m_Width, m_Height, m_ChannelsCount);
+        m_isLoaded = true;
 
         return true;
     }
@@ -82,23 +98,35 @@ namespace Simpleton {
         m_ChannelsCount = channelsCount;
         m_LoadType = TextureLoadType::Data;
 
-        Bind();
-
-        int mipmapLevel = 0;
-        unsigned int colorFormat = m_ChannelsCount == 3 ? GL_RGB : GL_RGBA;
-
-        glTexImage2D(GL_TEXTURE_2D, mipmapLevel, colorFormat, m_Width, m_Height, 0, colorFormat, GL_UNSIGNED_BYTE, m_Data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        GeneralLoad();
 
         printf("Loaded texture %u from data.\n", m_TextureId);
         printf("Width: %u, Height: %u, Channels: %u\n", m_Width, m_Height, m_ChannelsCount);
+        m_isLoaded = true;
 
         return true;
     }
 
+    void Texture::SetFiltering(TextureFiltering filteringMode) {
+        int filter;
+        switch(filteringMode) {
+            case TextureFiltering::Nearest:     
+                filter = GL_NEAREST;
+                break;
+            case TextureFiltering::Linear:     
+                filter = GL_LINEAR;
+                break;
+        }
+        m_FilteringMode = filter;
+    }
+
     void Texture::Bind() {
         glActiveTexture(GL_TEXTURE0 + m_Slot);
+
         glBindTexture(GL_TEXTURE_2D, m_TextureId);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_FilteringMode);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_FilteringMode);
     }
 
     void Texture::Unbind() {

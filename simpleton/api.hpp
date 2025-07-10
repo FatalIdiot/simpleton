@@ -3,6 +3,8 @@
 #include <functional>
 #include <chrono>
 #include <vector>
+#include <map>
+#include <string>
 
 // Events for keys and mouse
 #define KEY_EVENT_RELEASE 0
@@ -134,15 +136,23 @@ namespace Simpleton {
         Data
     };
 
+    enum TextureFiltering {
+        Nearest,
+        Linear
+    };
+
     class Texture {
         private:
             unsigned char m_Slot;
+            int m_FilteringMode;
 
             unsigned int m_TextureId;
             TextureLoadType m_LoadType;
 
             int m_Width, m_Height, m_ChannelsCount;
             unsigned char *m_Data;
+
+            bool m_isLoaded;
 
         public:
             Texture(unsigned char slot = 0);
@@ -151,6 +161,7 @@ namespace Simpleton {
             ~Texture();
 
             unsigned int GetId();
+            bool IsLoaded();
             void SetSlot(unsigned char slot);
 
             bool LoadFile(const char* filePath);
@@ -159,8 +170,28 @@ namespace Simpleton {
             void Bind();
             void Unbind();
 
+            void SetFiltering(TextureFiltering filteringMode);
+
         private:
             void Init(unsigned char slot);
+            void GeneralLoad();
+    };
+
+    class ResourceManager {
+        friend class Engine; 
+
+        private:
+            std::map<std::string, Texture*> m_Textures;
+
+        public:
+            Texture* GetTexture(const char* name);
+            void AddTexture(const char* name, Texture* texture);
+            void AddTexture(const char* name, const char* filePath, unsigned char slot = 0);
+            void AddTexture(const char* name, int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
+    
+        private:
+            void Init();
+            void Terminate();
     };
 
     class Renderer {
@@ -226,10 +257,11 @@ namespace Simpleton {
     };
 
     class Engine {
-         private:
+        private:
             bool m_IsRunning = false; // game will quit when this is false
-            Renderer m_Renderer;
-            Inputs m_Inputs;
+            Renderer* m_Renderer;
+            Inputs* m_Inputs;
+            ResourceManager* m_Library;
 
         public:
             Engine(int screenW, int screenH, char* title, unsigned int flags = 0); // init engine
@@ -240,11 +272,12 @@ namespace Simpleton {
 
             Renderer* GetRenderer();
             Inputs* GetInputs();
+            ResourceManager* GetLibrary();
 
             void CaptureCursor(bool setCapture); // Hide cursor and cature it inside window
             double GetTime(); // Get time in seconds since engine start
             void SetTime(double time); // Set engine time
-
+            
             void Stop(); // set m_isRunning to false
     };
 

@@ -3,6 +3,7 @@
 #include <functional>
 #include "renderer.hpp"
 #include "inputs.hpp"
+#include "resources/resourceManager.hpp"
 
 #define KEY_EVENT_RELEASE 0
 #define KEY_EVENT_PRESS 1
@@ -18,6 +19,7 @@ namespace Simpleton {
             bool m_IsRunning = false; // game will quit when this is false
             Renderer* m_Renderer;
             Inputs* m_Inputs;
+            ResourceManager* m_Library;
 
         public:
             Engine(int screenW, int screenH, char* title, unsigned int flags = 0); // init engine
@@ -28,6 +30,7 @@ namespace Simpleton {
 
             Renderer* GetRenderer();
             Inputs* GetInputs();
+            ResourceManager* GetLibrary();
 
             void CaptureCursor(bool setCapture); // Hide cursor and cature it inside window
             double GetTime(); // Get time in seconds since engine start

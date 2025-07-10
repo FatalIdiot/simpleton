@@ -41,6 +41,11 @@ namespace Simpleton {
             return false;
         }
 
+        // Enable alpha blending for textures with alpha channel
+        // Might make this more addaptable in future for optimization
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         // Shader for texture drawing functions
         m_PrimitiveShader.AddShaderSource(ShaderType::VertexShader, "#version 330 core\n"
             "layout (location = 0) in vec2 aPos;\n"

@@ -37,15 +37,10 @@ int main() {
             { 1.0f, 1.0f, 1.0f, 1.0f },
             { 800 - 70, 500, 50 }
         );
-
-        Simpleton::Color<unsigned char> textureData[25 * 25] = { 255, 0, 0, 255 };
-        for(int i = 0; i < 25 * 25; i++) {
-            textureData[i] = Simpleton::Color<unsigned char>{ 255, 0, 0, 255 };
-        }
-        Simpleton::Texture testTexture(25, 25, 4, (unsigned char*)textureData);
-
-        Simpleton::Rect<int> destRect = {0, 0, 200, 200};
-        renderer->BlitTexture(&testTexture, destRect);
+        
+        // Test missing texture
+        Simpleton::Rect<int> destRect = {0, 0, 500, 500};
+        renderer->BlitTexture(engine.GetLibrary()->GetTexture("test"), destRect);
     });
     
     return 0;

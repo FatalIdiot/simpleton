@@ -79,6 +79,9 @@ namespace Simpleton {
         m_Inputs = new Inputs();
         m_Inputs->Init(this);
 
+        m_Library = new ResourceManager();
+        m_Library->Init();
+
         ShaderUniformManager::SetEngine(this);
 
         printf("Engine Init done...\n");
@@ -97,6 +100,9 @@ namespace Simpleton {
 
         m_Inputs->Terminate();
         delete m_Inputs;
+
+        m_Library->Terminate();
+        delete m_Library;
     }
 
     void Engine::Run(std::function<void(float dt)> Update)  {
@@ -122,6 +128,10 @@ namespace Simpleton {
 
     Inputs* Engine::GetInputs() {
         return m_Inputs;
+    }
+
+    ResourceManager* Engine::GetLibrary() {
+        return m_Library;
     }
 
     void Engine::CaptureCursor(bool setCapture) {
