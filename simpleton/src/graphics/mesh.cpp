@@ -14,8 +14,8 @@ namespace Simpleton {
 
     unsigned int Mesh::GetTypeSize(unsigned int type) {
         switch(type) {
-            case GL_BYTE:               return sizeof(bool);
-            case GL_UNSIGNED_BYTE:      return sizeof(bool);
+            case GL_BYTE:               return sizeof(char);
+            case GL_UNSIGNED_BYTE:      return sizeof(unsigned char);
             case GL_SHORT:              return sizeof(short);
             case GL_UNSIGNED_SHORT:     return sizeof(unsigned short);
             case GL_INT:                return sizeof(int);
@@ -43,6 +43,7 @@ namespace Simpleton {
     }
 
     Mesh::~Mesh() {
+        printf("Terminating mesh...\n");
         Terminate();
     }
 

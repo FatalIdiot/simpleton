@@ -16,6 +16,7 @@ namespace Simpleton {
     }
 
     Shader::~Shader() {
+        printf("Terminating shader %u...\n", m_ShaderProgId);
         Terminate();
     }
 
@@ -107,6 +108,11 @@ namespace Simpleton {
     void Shader::SetUniform(const char* name, float x, float y, float z, float w) {
         int uniformLocation = glGetUniformLocation(m_ShaderProgId, name);
         glUniform4f(uniformLocation, x, y, z, w);
+    }
+
+    void Shader::SetUniform(const char* name, int i) {
+        int uniformLocation = glGetUniformLocation(m_ShaderProgId, name);
+        glUniform1i(uniformLocation, i);
     }
 
     void Shader::Bind() {

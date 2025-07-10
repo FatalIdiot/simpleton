@@ -119,6 +119,7 @@ namespace Simpleton {
 
             // set uniforms
             void SetUniform(const char* name, float x, float y, float z, float w);
+            void SetUniform(const char* name, int i);
 
             void Bind();
             void Unbind();
@@ -126,6 +127,40 @@ namespace Simpleton {
         private:
             bool CheckShaderValid(ShaderType type);
             void Terminate();
+    };
+
+    enum TextureLoadType {
+        File,
+        Data
+    };
+
+    class Texture {
+        private:
+            unsigned char m_Slot;
+
+            unsigned int m_TextureId;
+            TextureLoadType m_LoadType;
+
+            int m_Width, m_Height, m_ChannelsCount;
+            unsigned char *m_Data;
+
+        public:
+            Texture(unsigned char slot = 0);
+            Texture(const char* filePath, unsigned char slot = 0);
+            Texture(int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
+            ~Texture();
+
+            unsigned int GetId();
+            void SetSlot(unsigned char slot);
+
+            bool LoadFile(const char* filePath);
+            bool LoadData(int width, int height, int channelsCount, unsigned char* data);
+
+            void Bind();
+            void Unbind();
+
+        private:
+            void Init(unsigned char slot);
     };
 
     class Renderer {
@@ -139,6 +174,7 @@ namespace Simpleton {
         private:
             Mesh m_PrimitiveMesh;
             Shader m_PrimitiveShader;
+            Shader m_TextureShader;
 
         public:
             template <typename T>
@@ -148,10 +184,13 @@ namespace Simpleton {
             void SetWireframeRendering(bool enable); // enable rendering wireframes
             void SetWindowResizable(bool setResizable);
             void SetClearColor(float r, float g, float b);
+            void DepthTest(bool enable);
 
             void FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3);
             void FillRect(Color<float> color, Rect<int> area);
             void FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
+
+            void BlitTexture(Texture* texture, Rect<int> destRect, Rect<float> srcRect = {0.0f, 0.0f, 1.0f, 1.0f});
 
         private:
             bool Init(void* engine, GLFWwindow* window);
@@ -208,19 +247,6 @@ namespace Simpleton {
 
             void Stop(); // set m_isRunning to false
     };
-
-    // class SimpleTexture {
-    //     public:
-    //         unsigned int m_TextureId;
-    //         int m_Width, m_Height, m_Channels;
-    //         unsigned char* m_Data;
-
-    //     public:
-    //         SimpleTexture(const char* texturePath, bool flip, bool genMipmaps = true);
-
-    //         void Bind(unsigned short slot);
-    //         void Unbind();
-    // };
 
     class Timer {
         public:

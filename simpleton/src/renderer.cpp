@@ -41,8 +41,9 @@ namespace Simpleton {
             return false;
         }
 
+        // Shader for texture drawing functions
         m_PrimitiveShader.AddShaderSource(ShaderType::VertexShader, "#version 330 core\n"
-            "layout (location = 0) in vec3 aPos;\n"
+            "layout (location = 0) in vec2 aPos;\n"
             "uniform ivec2 ScreenSize;\n"
             "void main()\n"
             "{\n"
@@ -60,6 +61,31 @@ namespace Simpleton {
             "    FragColor = Color;\n"
             "}\0");
         m_PrimitiveShader.Compile();
+
+        // Shader for blitting textures
+        m_TextureShader.AddShaderSource(ShaderType::VertexShader, "#version 330 core\n"
+            "layout (location = 0) in vec2 aPos;\n"
+            "layout (location = 1) in vec2 aTextureCoord;\n"
+            "out vec2 TextureCoord;\n"
+            "uniform ivec2 ScreenSize;\n"
+            "void main()\n"
+            "{\n"
+            "   gl_Position = vec4(\n"
+            "       (aPos.x / ScreenSize.x) * 2.0 - 1.0,\n"
+            "       ((aPos.y / ScreenSize.y) * 2.0 - 1.0) * -1,\n"
+            "       0.0, 1.0\n"
+            "   );\n"
+            "   TextureCoord = aTextureCoord;"
+            "}\0");
+        m_TextureShader.AddShaderSource(ShaderType::FragmentShader, "#version 330 core\n"
+            "out vec4 FragColor;\n"
+            "in vec2 TextureCoord;"
+            "uniform sampler2D texture1;"
+            "void main()\n"
+            "{\n"
+            "    FragColor = texture(texture1, TextureCoord);\n"
+            "}\0");
+        m_TextureShader.Compile();
 
         return true;
     }
@@ -97,6 +123,13 @@ namespace Simpleton {
 
     void Renderer::SetClearColor(float r, float g, float b) {
         glClearColor(r, g, b, 1.0f);
+    }
+
+    void Renderer::DepthTest(bool enable) {
+        if(enable)
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
     }
 
     void Renderer::FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3) {
@@ -180,6 +213,42 @@ namespace Simpleton {
         m_PrimitiveMesh.Draw();
 
         delete screenSpaceVerts;
+    }
+
+    void Renderer::BlitTexture(Texture* texture, Rect<int> destRect, Rect<float> srcRect) {
+        texture->Bind();
+        m_PrimitiveMesh.Bind();
+
+        m_TextureShader.Bind();
+        m_TextureShader.SetUniform("texture1", 0);
+
+        struct ShaderTextureCoords {
+            int posX;
+            int posY;
+            float textureCoordX;
+            float textureCoordY;
+        };
+
+        ShaderTextureCoords screenSpaceVerts[4] = {
+            {destRect.x, destRect.y,                            srcRect.x, srcRect.y},
+            {destRect.x, destRect.y + destRect.h,               srcRect.x, srcRect.y + srcRect.h},
+            {destRect.x + destRect.w, destRect.y,               srcRect.x + srcRect.w, srcRect.y},
+            {destRect.x + destRect.w, destRect.y + destRect.h,  srcRect.x + srcRect.w, srcRect.y + srcRect.h}
+        };
+
+        m_PrimitiveMesh.SetBufferData(GL_TRIANGLES, screenSpaceVerts, sizeof(ShaderTextureCoords) * 4);
+        
+        unsigned int indexes[6] = {
+            0, 1, 2, 1, 2, 3
+        };
+        m_PrimitiveMesh.SetIndexData(indexes, 6);
+
+        MeshAttribute attributes[2] = {
+            { GL_INT, 2 }, { GL_FLOAT, 2 }
+        };
+        m_PrimitiveMesh.SetAttributes(attributes, 2);
+
+        m_PrimitiveMesh.Draw();
     }
 
     void Renderer::ClearScreen() {

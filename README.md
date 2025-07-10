@@ -12,6 +12,7 @@ Simpleton is a framework for game development.
 + [Renderer](#renderer)
 + [Mesh](#mesh)
 + [Shader](#shader)
++ [Texture](#texture)
 + [Shader Uniform Manager](#shader-uniform-manager)<br />
 
 # Compilation
@@ -75,6 +76,8 @@ Along with the `Timer` class, engine also tracs of the time since it was initial
 To stop the game loop, call `Stop` method. <br />
 When quiting the game, `Terminate` method must be called.<br />
 
+
+
 ### Timer
 
 **Methods:**
@@ -93,7 +96,11 @@ Timer allows to take time measurements. It has the following functions: <br />
 `GetPassedTime` - get total time passed while timer was running and not paused. <br />
 `Elapsed` - get time from timer start or from the last Elapsed call. Timer must be running and not be paused for this. Returns `0.0f` as default. <br />
 
+
+
 ### Inputs
+
+
 
 ### Renderer
 
@@ -106,12 +113,15 @@ Timer allows to take time measurements. It has the following functions: <br />
 - `FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3)`
 - `FillRect(Color<float> color, Rect<int> area)`
 - `FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25)`
+- `BlitTexture(Texture* texture, Rect<int> destRect, Rect<float> srcRect = {0.0f, 0.0f, 1.0f, 1.0f});` - renders the `texture` to the screen. If `srcRect` not provided, will blit the entire texture to the `destRect` coordinates on screen.
 
 Renderer class is an abstraction above OpenGL, that is set to allow drawing primitives, textures and models.<br />
 When using Simpleton, you can get the Renderer instance from the Engine object: `engine.GetRenderer()`, this will give a Renderer pointer.<br />
 **Rendering:** <br />
 Primitives are rendered using the following methods: <br />
 `FillTriangle`, `FillRect`, `FillCircle`. All of them take a `Color` as the first parameter, and then relevant data of the primitive. For circle rendering, the number of points that form the circle may be specified, default value, if nothing is specified, is `25`. <br />
+
+
 
 ### Mesh
 
@@ -148,6 +158,8 @@ Data is set by calling the `SetBufferData` method, and attributes can be specifi
     testMesh.SetAttributes(attributes, 1);
     testMesh.Draw();
 ```
+
+
 
 ### Shader
 
@@ -193,6 +205,25 @@ Shaders have global uniforms, that are passed to them before drawing by the engi
 
 > [!TIP]
 > These values are set by the static method `SetData` of the static `ShaderUniformManager` class when the `Draw` method of `Mesh` is called.
+
+
+
+### Texture
+
+**Methods:**
+- `Texture(unsigned char slot = 0)`
+- `Texture(const char* filePath, unsigned char slot = 0)`
+- `Texture(int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0)`
+- `GetId()` - returns the texture internal ID, of `unsigned int` format.
+- `SetSlot(unsigned char slot)` - sets the currently active texture slot and binds the texture, to use this texture under the provided slot in a shader.
+- `LoadFile(const char* filePath)` - load texture data from a file.
+- `LoadData(int width, int height, int channelsCount, unsigned char* data)` - manually provide texture data, used to make textures with code.
+- `Bind() | Unbind()`
+
+Class to hold textures. Textures can be loaded from a file, of by providing a data array with pixel data either in RGB or RGBA format, elements are `unsigned char`. <br />
+Textures are binded to a slot, to be able to use multiple textures in a shader. Texture's slot is set in a constructor (default is `0`) or by calling the `SetSlot` method. <br />
+
+
 
 ### Shader Uniform Manager
 

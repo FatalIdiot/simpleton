@@ -2,10 +2,10 @@
 
 #include <functional>
 
-#include "simpleTexture.hpp"
 #include "utils.hpp"
 #include "graphics/mesh.hpp"
 #include "graphics/shader.hpp"
+#include "resources/texture.hpp"
 
 typedef struct GLFWwindow GLFWwindow;
 
@@ -23,6 +23,7 @@ namespace Simpleton {
         private:
             Mesh m_PrimitiveMesh;
             Shader m_PrimitiveShader;
+            Shader m_TextureShader;
 
         public:
             template <typename T>
@@ -32,10 +33,13 @@ namespace Simpleton {
             void SetWireframeRendering(bool enable); // enable rendering wireframes
             void SetWindowResizable(bool setResizable);
             void SetClearColor(float r, float g, float b);
+            void DepthTest(bool enable);
 
             void FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3);
             void FillRect(Color<float> color, Rect<int> area);
             void FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
+
+            void BlitTexture(Texture* texture, Rect<int> destRect, Rect<float> srcRect = {0.0f, 0.0f, 1.0f, 1.0f});
 
         private:
             bool Init(void* engine, GLFWwindow* window);

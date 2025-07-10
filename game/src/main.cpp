@@ -20,20 +20,32 @@ int main() {
     };
 
     engine.Run([&engine](float dt) {
-        engine.GetRenderer()->FillTriangle(
+        Simpleton::Renderer* renderer = engine.GetRenderer();
+        renderer->DepthTest(false);
+
+        renderer->FillTriangle(
             { 1.0f, 1.0f, 1.0f, 1.0f },
             { 0, 0 },
             { 400, 800 },
             { 800, 0 }
         );
-        engine.GetRenderer()->FillRect(
+        renderer->FillRect(
             { 1.0f, 1.0f, 1.0f, 1.0f },
             { 50, 500, 50, 50 }
         );
-        engine.GetRenderer()->FillCircle(
+        renderer->FillCircle(
             { 1.0f, 1.0f, 1.0f, 1.0f },
             { 800 - 70, 500, 50 }
         );
+
+        Simpleton::Color<unsigned char> textureData[25 * 25] = { 255, 0, 0, 255 };
+        for(int i = 0; i < 25 * 25; i++) {
+            textureData[i] = Simpleton::Color<unsigned char>{ 255, 0, 0, 255 };
+        }
+        Simpleton::Texture testTexture(25, 25, 4, (unsigned char*)textureData);
+
+        Simpleton::Rect<int> destRect = {0, 0, 200, 200};
+        renderer->BlitTexture(&testTexture, destRect);
     });
     
     return 0;

@@ -27,6 +27,7 @@ namespace Simpleton {
 
             // set uniforms
             void SetUniform(const char* name, float x, float y, float z, float w);
+            void SetUniform(const char* name, int i);
 
             void Bind();
             void Unbind();
