@@ -113,13 +113,18 @@ Timer allows to take time measurements. It has the following functions: <br />
 - `FillTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3)`
 - `FillRect(Color<float> color, Rect<int> area)`
 - `FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25)`
+- `DrawLine(Color<float> color, Point<int> pointA, Point<int> pointB)` 
+- `DrawTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3)`
+- `DrawRect(Color<float> color, Rect<int> area)`
+- `DrawCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25)`
 - `BlitTexture(Texture* texture, Rect<int> destRect, Rect<float> srcRect = {0.0f, 0.0f, 1.0f, 1.0f});` - renders the `texture` to the screen. If `srcRect` not provided, will blit the entire texture to the `destRect` coordinates on screen.
 
 Renderer class is an abstraction above OpenGL, that is set to allow drawing primitives, textures and models.<br />
 When using Simpleton, you can get the Renderer instance from the Engine object: `engine.GetRenderer()`, this will give a Renderer pointer.<br />
 **Rendering:** <br />
 Primitives are rendered using the following methods: <br />
-`FillTriangle`, `FillRect`, `FillCircle`. All of them take a `Color` as the first parameter, and then relevant data of the primitive. For circle rendering, the number of points that form the circle may be specified, default value, if nothing is specified, is `25`. <br />
+`FillTriangle`, `FillRect`, `FillCircle` to draw filled primitives, `DrawLine`, `DrawTriangle`, `DrawRect`, `DrawCircle` to draw primitives as lines. All of them take a `Color` as the first parameter, and then relevant data of the primitive. For circle rendering, the number of points that form the circle may be specified, default value, if nothing is specified, is `25`. <br />
+To draw a texture to the screen, `BlitTexture` method is used. First parameter is the texture pointer, second - a rect that specifies an area on screen and the third is the area of texture in UV coordinages (`float, 0.0f - 1.0f`). Last parameter can be ommitted, then the entire texture will be displayed. <br />
 
 
 

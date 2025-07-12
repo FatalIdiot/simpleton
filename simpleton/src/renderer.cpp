@@ -220,6 +220,118 @@ namespace Simpleton {
         delete screenSpaceVerts;
     }
 
+    void Renderer::DrawLine(Color<float> color, Point<int> pointA, Point<int> pointB) {
+        m_PrimitiveShader.Bind();
+        m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
+
+        int screenSpaceVerts[4] = {
+            pointA.x, pointA.y,
+            pointB.x, pointB.y
+        };
+        m_PrimitiveMesh.SetBufferData(GL_LINES, screenSpaceVerts, sizeof(screenSpaceVerts));
+        
+        unsigned int indexes[2] = {
+            0, 1
+        };
+        m_PrimitiveMesh.SetIndexData(indexes, 2);
+
+        MeshAttribute attributes[] = {
+            { GL_INT, 2 }
+        };
+        m_PrimitiveMesh.SetAttributes(attributes, 1);
+
+        m_PrimitiveMesh.Draw();
+    }
+
+    void Renderer::DrawTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3) {
+        m_PrimitiveShader.Bind();
+        m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
+
+        int screenSpaceVerts[6] = {
+            pos1.x, pos1.y,
+            pos2.x, pos2.y,
+            pos3.x, pos3.y
+        };
+        m_PrimitiveMesh.SetBufferData(GL_LINES, screenSpaceVerts, sizeof(screenSpaceVerts));
+        
+        unsigned int indexes[6] = {
+            0, 1, 1, 2, 2, 0
+        };
+        m_PrimitiveMesh.SetIndexData(indexes, 6);
+
+        MeshAttribute attributes[] = {
+            { GL_INT, 2 }
+        };
+        m_PrimitiveMesh.SetAttributes(attributes, 1);
+
+        m_PrimitiveMesh.Draw();
+    }
+    
+    void Renderer::DrawRect(Color<float> color, Rect<int> area) {
+        m_PrimitiveShader.Bind();
+        m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
+
+        int screenSpaceVerts[8] = {
+            area.x, area.y,
+            area.x + area.w, area.y,
+            area.x + area.w, area.y + area.h,
+            area.x, area.y + area.h
+        };
+        m_PrimitiveMesh.SetBufferData(GL_LINES, screenSpaceVerts, sizeof(screenSpaceVerts));
+        
+        unsigned int indexes[8] = {
+            0, 1, 1, 2, 2, 3, 3, 0
+        };
+        m_PrimitiveMesh.SetIndexData(indexes, 8);
+
+        MeshAttribute attributes[] = {
+            { GL_INT, 2 }
+        };
+        m_PrimitiveMesh.SetAttributes(attributes, 1);
+
+        m_PrimitiveMesh.Draw();
+    }
+    
+    void Renderer::DrawCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount) {
+        m_PrimitiveShader.Bind();
+        m_PrimitiveShader.SetUniform("Color", color.r, color.g, color.b, color.a);
+
+        int* screenSpaceVerts = new int[pointsCount * 2];
+
+        // Set points positions
+        for(int i = 0; i < pointsCount; i++) {
+            float angle = 2 * static_cast<float>(M_PI) * i / pointsCount;
+            int x = static_cast<int>( circle.x + circle.radius * cos(angle) );
+            int y = static_cast<int>( circle.y + circle.radius * sin(angle) );
+            screenSpaceVerts[i * 2] = x;
+            screenSpaceVerts[i * 2 + 1] = y;
+        }
+
+        m_PrimitiveMesh.SetBufferData(GL_LINES, screenSpaceVerts, pointsCount * 2 * sizeof(int));
+
+        MeshAttribute attributes[] = {
+            { GL_INT, 2 }
+        };
+        m_PrimitiveMesh.SetAttributes(attributes, 1);
+
+        // Set point indexes
+        unsigned int* indexes = new unsigned int[pointsCount * 2];
+        for(int i = 0, j = 0; i < pointsCount * 2; i+=2, j++) {
+            if(i == (pointsCount * 2) - 2) {
+                indexes[i] = j;
+                indexes[i+1] = 0;
+                break;
+            }
+            indexes[i] = j;
+            indexes[i+1] = j + 1;
+        }
+        m_PrimitiveMesh.SetIndexData(indexes, pointsCount * 2);
+
+        m_PrimitiveMesh.Draw();
+
+        delete screenSpaceVerts;
+    }
+    
     void Renderer::BlitTexture(Texture* texture, Rect<int> destRect, Rect<float> srcRect) {
         texture->Bind();
         m_PrimitiveMesh.Bind();
