@@ -4,7 +4,145 @@
 #include <chrono>
 #include <vector>
 #include <map>
+#include <queue>
 #include <string>
+
+// Key bindings
+#define 	VK_KEY_SPACE   32
+#define 	VK_KEY_APOSTROPHE   39 /* ' */
+#define 	VK_KEY_COMMA   44 /* , */
+#define 	VK_KEY_MINUS   45 /* - */
+#define 	VK_KEY_PERIOD   46 /* . */
+#define 	VK_KEY_SLASH   47 /* / */
+#define 	VK_KEY_0   48
+#define 	VK_KEY_1   49
+#define 	VK_KEY_2   50
+#define 	VK_KEY_3   51
+#define 	VK_KEY_4   52
+#define 	VK_KEY_5   53
+#define 	VK_KEY_6   54
+#define 	VK_KEY_7   55
+#define 	VK_KEY_8   56
+#define 	VK_KEY_9   57
+#define 	VK_KEY_SEMICOLON   59 /* ; */
+#define 	VK_KEY_EQUAL   61 /* = */
+#define 	VK_KEY_A   65
+#define 	VK_KEY_B   66
+#define 	VK_KEY_C   67
+#define 	VK_KEY_D   68
+#define 	VK_KEY_E   69
+#define 	VK_KEY_F   70
+#define 	VK_KEY_G   71
+#define 	VK_KEY_H   72
+#define 	VK_KEY_I   73
+#define 	VK_KEY_J   74
+#define 	VK_KEY_K   75
+#define 	VK_KEY_L   76
+#define 	VK_KEY_M   77
+#define 	VK_KEY_N   78
+#define 	VK_KEY_O   79
+#define 	VK_KEY_P   80
+#define 	VK_KEY_Q   81
+#define 	VK_KEY_R   82
+#define 	VK_KEY_S   83
+#define 	VK_KEY_T   84
+#define 	VK_KEY_U   85
+#define 	VK_KEY_V   86
+#define 	VK_KEY_W   87
+#define 	VK_KEY_X   88
+#define 	VK_KEY_Y   89
+#define 	VK_KEY_Z   90
+#define 	VK_KEY_LEFT_BRACKET   91 /* [ */
+#define 	VK_KEY_BACKSLASH   92 /* \ */
+#define 	VK_KEY_RIGHT_BRACKET   93 /* ] */
+#define 	VK_KEY_GRAVE_ACCENT   96 /* ` */
+#define 	VK_KEY_WORLD_1   161 /* non-US #1 */
+#define 	VK_KEY_WORLD_2   162 /* non-US #2 */
+#define 	VK_KEY_ESCAPE   256
+#define 	VK_KEY_ENTER   257
+#define 	VK_KEY_TAB   258
+#define 	VK_KEY_BACKSPACE   259
+#define 	VK_KEY_INSERT   260
+#define 	VK_KEY_DELETE   261
+#define 	VK_KEY_RIGHT   262
+#define 	VK_KEY_LEFT   263
+#define 	VK_KEY_DOWN   264
+#define 	VK_KEY_UP   265
+#define 	VK_KEY_PAGE_UP   266
+#define 	VK_KEY_PAGE_DOWN   267
+#define 	VK_KEY_HOME   268
+#define 	VK_KEY_END   269
+#define 	VK_KEY_CAPS_LOCK   280
+#define 	VK_KEY_SCROLL_LOCK   281
+#define 	VK_KEY_NUM_LOCK   282
+#define 	VK_KEY_PRINT_SCREEN   283
+#define 	VK_KEY_PAUSE   284
+#define 	VK_KEY_F1   290
+#define 	VK_KEY_F2   291
+#define 	VK_KEY_F3   292
+#define 	VK_KEY_F4   293
+#define 	VK_KEY_F5   294
+#define 	VK_KEY_F6   295
+#define 	VK_KEY_F7   296
+#define 	VK_KEY_F8   297
+#define 	VK_KEY_F9   298
+#define 	VK_KEY_F10   299
+#define 	VK_KEY_F11   300
+#define 	VK_KEY_F12   301
+#define 	VK_KEY_F13   302
+#define 	VK_KEY_F14   303
+#define 	VK_KEY_F15   304
+#define 	VK_KEY_F16   305
+#define 	VK_KEY_F17   306
+#define 	VK_KEY_F18   307
+#define 	VK_KEY_F19   308
+#define 	VK_KEY_F20   309
+#define 	VK_KEY_F21   310
+#define 	VK_KEY_F22   311
+#define 	VK_KEY_F23   312
+#define 	VK_KEY_F24   313
+#define 	VK_KEY_F25   314
+#define 	VK_KEY_KP_0   320
+#define 	VK_KEY_KP_1   321
+#define 	VK_KEY_KP_2   322
+#define 	VK_KEY_KP_3   323
+#define 	VK_KEY_KP_4   324
+#define 	VK_KEY_KP_5   325
+#define 	VK_KEY_KP_6   326
+#define 	VK_KEY_KP_7   327
+#define 	VK_KEY_KP_8   328
+#define 	VK_KEY_KP_9   329
+#define 	VK_KEY_KP_DECIMAL   330
+#define 	VK_KEY_KP_DIVIDE   331
+#define 	VK_KEY_KP_MULTIPLY   332
+#define 	VK_KEY_KP_SUBTRACT   333
+#define 	VK_KEY_KP_ADD   334
+#define 	VK_KEY_KP_ENTER   335
+#define 	VK_KEY_KP_EQUAL   336
+#define 	VK_KEY_LEFT_SHIFT   340
+#define 	VK_KEY_LEFT_CONTROL   341
+#define 	VK_KEY_LEFT_ALT   342
+#define 	VK_KEY_LEFT_SUPER   343
+#define 	VK_KEY_RIGHT_SHIFT   344
+#define 	VK_KEY_RIGHT_CONTROL   345
+#define 	VK_KEY_RIGHT_ALT   346
+#define 	VK_KEY_RIGHT_SUPER   347
+#define 	VK_KEY_MENU   348 
+#define 	VK_KEY_LAST   VK_KEY_MENU
+
+// Mouse bindings
+#define MOUSE_BUTTON_1         0
+#define MOUSE_BUTTON_2         1
+#define MOUSE_BUTTON_3         2
+#define MOUSE_BUTTON_4         3
+#define MOUSE_BUTTON_5         4
+#define MOUSE_BUTTON_6         5
+#define MOUSE_BUTTON_7         6
+#define MOUSE_BUTTON_8         7
+#define MOUSE_BUTTON_LAST      MOUSE_BUTTON_8
+#define MOUSE_BUTTON_LEFT      MOUSE_BUTTON_1
+#define MOUSE_BUTTON_RIGHT     MOUSE_BUTTON_2
+#define MOUSE_BUTTON_MIDDLE    MOUSE_BUTTON_3
 
 // Events for keys and mouse
 #define KEY_EVENT_RELEASE 0
@@ -235,37 +373,17 @@ namespace Simpleton {
             void SwapBuffers();
     };
 
-    class Inputs {
-        friend class Engine; 
-
-        private:
-            Engine* m_Engine = nullptr;
-            int m_MouseX = 0, m_MouseY = 0;
-
-        public:
-            std::function<void(int button, int action)> OnMouseButton = NULL; // callback for mouse events
-            std::function<void(int xpos, int ypos)> OnMouseMove = NULL; // callback for mouse movement
-            std::function<void(int key, int scancode, int action)> OnKey = NULL; // callback for keyboard events
-
-        public:
-            void Init(Engine* engine);
-
-        private:
-            static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-            static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-            static void MousePositionCallback(GLFWwindow* window, double xpos, double ypos);
-            void Terminate();
-    };
-
     enum EngineFlags : unsigned int {
         EnableOglDebug = 1 << 0
     };
+
+    class InputsManager;
 
     class Engine {
         private:
             bool m_IsRunning = false; // game will quit when this is false
             Renderer* m_Renderer;
-            Inputs* m_Inputs;
+            InputsManager* m_Inputs;
             ResourceManager* m_Library;
 
         public:
@@ -276,7 +394,7 @@ namespace Simpleton {
             void Run(std::function<void(float dt)> Update); // start game loop, lambda function will be called each frame
 
             Renderer* GetRenderer();
-            Inputs* GetInputs();
+            InputsManager* GetInputs();
             ResourceManager* GetLibrary();
 
             void CaptureCursor(bool setCapture); // Hide cursor and cature it inside window
@@ -284,6 +402,50 @@ namespace Simpleton {
             void SetTime(double time); // Set engine time
             
             void Stop(); // set m_isRunning to false
+    };
+
+    enum InputEventType {
+        KeyboardKey,
+        MouseKey
+    };
+
+    struct InputEvent {
+        InputEventType type;
+        int key;
+        int action;
+        double time;
+        Point<unsigned int> mousePos;
+
+        InputEvent(InputEventType eType, int eKey, int eAction, double eTime, Point<unsigned int> eMousePos) :
+            type(eType), key(eKey), action(eAction), time(eTime), mousePos(eMousePos) {}
+    };
+
+    class InputsManager {
+        friend class Engine; 
+
+        private:
+            Engine* m_Engine = nullptr;
+            unsigned int m_MouseX, m_MouseY;
+            std::queue<InputEvent> m_Events; 
+            std::map<int, std::vector< std::function<void(InputEvent e)> >> m_Bindings;
+
+        public:
+            void AddBinding(int key, std::function<void(InputEvent e)> func); 
+            void RemoveBinding(int key);
+
+        private:
+            void Init(Engine* engine);
+            void Terminate();
+
+            void ProcessKey(InputEventType type, int key, int action);
+            void MouseMove(double xpos, double ypos);
+
+            void PollInputEvents();
+            
+            // Static methods that are called by GLFW. Instance methods are called from these.
+            static void KeyboardCallbackDispatch(GLFWwindow* window, int key, int scancode, int action, int mods);
+            static void MouseCallbackDispatch(GLFWwindow* window, int button, int action, int mods);
+            static void MouseMoveDispatch(GLFWwindow* window, double xpos, double ypos);
     };
 
     class Timer {

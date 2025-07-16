@@ -5,21 +5,11 @@ int main() {
     engine.GetRenderer()->SetWindowResizable(false);
     engine.GetRenderer()->SetClearColor(0.0f, 0.0f, 0.0f);
 
-    engine.GetInputs()->OnMouseButton = [] (int button, int action) {
-        
-    };
+    engine.GetInputs()->AddBinding(VK_KEY_ESCAPE, [&engine](Simpleton::InputEvent e){
+        engine.Stop();
+    });
 
-    engine.GetInputs()->OnMouseMove = [&engine] (int xpos, int ypos) {
-        
-    };
-
-    engine.GetInputs()->OnKey = [&engine] (int key, int scancode, int action) {
-        // printf("Key %d, Action %d!\n", key, action);
-        if(key == 256 && action == 1)
-            engine.Stop();
-    };
-
-    engine.Run([&engine](float dt) {
+    engine.Run([&engine](float dt) {        
         Simpleton::Renderer* renderer = engine.GetRenderer();
         renderer->DepthTest(false);
 

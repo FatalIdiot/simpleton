@@ -76,7 +76,7 @@ namespace Simpleton {
             return;
         }
 
-        m_Inputs = new Inputs();
+        m_Inputs = new InputsManager();
         m_Inputs->Init(this);
 
         m_Library = new ResourceManager();
@@ -119,6 +119,7 @@ namespace Simpleton {
             
             m_Renderer->SwapBuffers();
             glfwPollEvents();
+            m_Inputs->PollInputEvents();
         }
     }
 
@@ -126,7 +127,7 @@ namespace Simpleton {
         return m_Renderer;
     }
 
-    Inputs* Engine::GetInputs() {
+    InputsManager* Engine::GetInputs() {
         return m_Inputs;
     }
 

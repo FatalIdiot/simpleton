@@ -1,8 +1,9 @@
 #pragma once
 
 #include <functional>
+
 #include "renderer.hpp"
-#include "inputs.hpp"
+#include "inputs/inputsManager.hpp"
 #include "resources/resourceManager.hpp"
 
 #define KEY_EVENT_RELEASE 0
@@ -10,6 +11,8 @@
 #define KEY_EVENT_REPEAT 2
 
 namespace Simpleton {
+    class InputsManager;
+    
     enum EngineFlags : unsigned int {
         EnableOglDebug = 1 << 0
     };
@@ -18,7 +21,7 @@ namespace Simpleton {
         private:
             bool m_IsRunning = false; // game will quit when this is false
             Renderer* m_Renderer;
-            Inputs* m_Inputs;
+            InputsManager* m_Inputs;
             ResourceManager* m_Library;
 
         public:
@@ -29,7 +32,7 @@ namespace Simpleton {
             void Run(std::function<void(float dt)> Update); // start game loop, lambda function will be called each frame
 
             Renderer* GetRenderer();
-            Inputs* GetInputs();
+            InputsManager* GetInputs();
             ResourceManager* GetLibrary();
 
             void CaptureCursor(bool setCapture); // Hide cursor and cature it inside window

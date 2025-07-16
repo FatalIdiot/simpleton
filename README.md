@@ -8,7 +8,7 @@ Simpleton is a framework for game development.
 **Entities:** <br />
 + [Engine](#engine)
 + [Timer](#timer)
-+ [Inputs](#inputs)
++ [Inputs Manager](#inputs-manager)
 + [Renderer](#renderer)
 + [Mesh](#mesh)
 + [Shader](#shader)
@@ -59,6 +59,7 @@ For `FillCircle` you can specify the number of points that will form the circle,
 - `Run(std::function<void(float dt)> Update)` - defines the game loop
 - `GetRenderer()` - returns a pointer to the Renderer instance
 - `GetInputs()` - returns a pointer to the Inputs instance
+- `GetLibrary()` - returns a pointer to the Resource Manager instance
 - `CaptureCursor(bool setCapture)` - captures the cursor inside the window
 - `GetTime()` - returns a `double` of time in seconds
 - `SetTime(double time)` - set the time in seconds
@@ -98,7 +99,22 @@ Timer allows to take time measurements. It has the following functions: <br />
 
 
 
-### Inputs
+### Inputs Manager
+
+**Methods:**
+- `AddBinding(int key, std::function<void(InputEvent e)> func)` - adds a function to the key. Function takes a InputEvent object.
+- `RemoveBinding(int key)` - removes bindings from a key.
+
+Allows to bind keyboard and mouse buttons to functions. <br />
+`InputEvent` has following fields: <br />
+- InputEventType type;
+- int key;
+- int action;
+- double time;
+- Point<unsigned int> mousePos;
+
+> [!TIP]
+> Manager takes input callbacks of GLFW and constructs Simpleton InputEvents, that are then added to an event queue. These events are then polled in the end of game loop, invoking binded functions. The function takes the current InputEvent as argument. 
 
 
 
