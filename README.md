@@ -113,6 +113,8 @@ Allows to bind keyboard and mouse buttons to functions. <br />
 - double time;
 - Point<unsigned int> mousePos;
 
+Keyboard and Mouse key VK codes can be found at the top of `api.hpp` file.<br />
+
 > [!TIP]
 > Manager takes input callbacks of GLFW and constructs Simpleton InputEvents, that are then added to an event queue. These events are then polled in the end of game loop, invoking binded functions. The function takes the current InputEvent as argument. 
 
