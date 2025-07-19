@@ -4,6 +4,7 @@ project(SIMPLETON_LIB)
 FILE(GLOB SIMPLETON_FILES
     src/*.cpp src/*.h
     src/graphics/*.cpp src/graphics/*.h
+    src/audio/*.cpp src/audio/*.h
     src/inputs/*.cpp src/inputs/*.h
     src/resources/*.cpp src/resources/*.h
     vendor/glad/glad.c

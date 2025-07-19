@@ -1,3 +1,5 @@
+call build_vars.bat
+
 @echo ======== Compiling Game
 del GAME.exe
 cd game
@@ -5,7 +7,15 @@ rmdir /s /q build
 mkdir build
 cd build
 cmake ..
-cmake --build . --config Release
+
+IF %BUILD_MODE% == "DEBUG" (
+    cmake --build .
+)
+IF %BUILD_MODE% == "RELEASE" (
+    cmake --build . --config Release
+)
+
+@REM cmake --build . --config Release
 @REM cmake --build .
 
 cd ../..

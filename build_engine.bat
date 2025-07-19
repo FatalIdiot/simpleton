@@ -1,3 +1,5 @@
+call build_vars.bat
+
 @echo ======== Compiling Simpleton
 cd simpleton
 rmdir /s /q build
@@ -6,7 +8,15 @@ rmdir /s /q bin
 mkdir bin
 cd build
 cmake ..
-cmake --build . --config Release
+
+IF %BUILD_MODE% == "DEBUG" (
+    cmake --build .
+)
+IF %BUILD_MODE% == "RELEASE" (
+    cmake --build . --config Release
+)
+
+@REM cmake --build . --config Release
 @REM cmake --build .
 
 cd ..
