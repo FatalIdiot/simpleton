@@ -15,13 +15,14 @@ IF %BUILD_MODE% == "RELEASE" (
     cmake --build . --config Release
 )
 
-@REM cmake --build . --config Release
-@REM cmake --build .
-
 cd ../..
 
-@echo ======== Copy Simpleton files to root
-set assetsSource=%~dp0game\build\Release\GAME.exe
-@REM set assetsSource=%~dp0game\build\Debug\GAME.exe
+@echo ======== Copy game .exe to root
+IF %BUILD_MODE% == "DEBUG" (
+    set assetsSource=%~dp0game\build\Debug\GAME.exe
+)
+IF %BUILD_MODE% == "RELEASE" (
+    set assetsSource=%~dp0game\build\Release\GAME.exe
+)
 set assetsDestinationPath=%~dp0
 xcopy "%assetsSource%" "%assetsDestinationPath%" /E /H /C /I /Y

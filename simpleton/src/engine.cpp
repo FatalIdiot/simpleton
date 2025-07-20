@@ -82,6 +82,9 @@ namespace Simpleton {
         m_Library = new ResourceManager();
         m_Library->Init();
 
+        m_Audio = new AudioManager();
+        m_Audio->Init(this);
+
         ShaderUniformManager::SetEngine(this);
 
         printf("Engine Init done...\n");
@@ -103,6 +106,9 @@ namespace Simpleton {
 
         m_Library->Terminate();
         delete m_Library;
+
+        m_Audio->Terminate();
+        delete m_Audio;
     }
 
     void Engine::Run(std::function<void(float dt)> Update)  {

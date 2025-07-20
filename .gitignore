@@ -6,3 +6,5 @@
 /GAME.exe
 /simpleton/bin/SIMPLETON_LIB.lib
 /simpleton/bin/api.hpp
+
+/simpleton/vendor/openal-soft/build

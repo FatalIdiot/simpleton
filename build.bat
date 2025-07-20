@@ -1,2 +1,2 @@
 cls
-build_engine && build_game
+build_openal && build_engine && build_game

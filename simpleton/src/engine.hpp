@@ -5,6 +5,7 @@
 #include "renderer.hpp"
 #include "inputs/inputsManager.hpp"
 #include "resources/resourceManager.hpp"
+#include "audio/audioManager.hpp"
 
 #define KEY_EVENT_RELEASE 0
 #define KEY_EVENT_PRESS 1
@@ -12,6 +13,7 @@
 
 namespace Simpleton {
     class InputsManager;
+    class AudioManager;
     
     enum EngineFlags : unsigned int {
         EnableOglDebug = 1 << 0
@@ -23,6 +25,7 @@ namespace Simpleton {
             Renderer* m_Renderer;
             InputsManager* m_Inputs;
             ResourceManager* m_Library;
+            AudioManager* m_Audio;
 
         public:
             Engine(int screenW, int screenH, char* title, unsigned int flags = 0); // init engine
@@ -34,6 +37,7 @@ namespace Simpleton {
             Renderer* GetRenderer();
             InputsManager* GetInputs();
             ResourceManager* GetLibrary();
+            AudioManager* GetAudio();
 
             void CaptureCursor(bool setCapture); // Hide cursor and cature it inside window
             double GetTime(); // Get time in seconds since engine start

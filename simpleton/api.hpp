@@ -378,6 +378,7 @@ namespace Simpleton {
     };
 
     class InputsManager;
+    class AudioManager;
 
     class Engine {
         private:
@@ -396,6 +397,7 @@ namespace Simpleton {
             Renderer* GetRenderer();
             InputsManager* GetInputs();
             ResourceManager* GetLibrary();
+            AudioManager* GetAudio();
 
             void CaptureCursor(bool setCapture); // Hide cursor and cature it inside window
             double GetTime(); // Get time in seconds since engine start
@@ -446,6 +448,20 @@ namespace Simpleton {
             static void KeyboardCallbackDispatch(GLFWwindow* window, int key, int scancode, int action, int mods);
             static void MouseCallbackDispatch(GLFWwindow* window, int button, int action, int mods);
             static void MouseMoveDispatch(GLFWwindow* window, double xpos, double ypos);
+    };
+
+    class AudioManager {
+        friend class Engine; 
+
+        private:
+            Engine* m_Engine = nullptr;
+
+        public:
+            AudioManager();
+            
+        private:
+            void Init(Engine* engine);
+            void Terminate();
     };
 
     class Timer {
