@@ -7,6 +7,14 @@
 #include <queue>
 #include <string>
 
+// OpenAL defines
+#define SOUND_FORMAT_MONO8              0x1100
+#define SOUND_FORMAT_MONO16             0x1101
+#define SOUND_FORMAT_STEREO8            0x1102
+#define SOUND_FORMAT_STEREO16           0x1103
+#define SOUND_FORMAT_MONO_FLOAT32       0x10010
+#define SOUND_FORMAT_STEREO_FLOAT32     0x10011
+
 // Key bindings
 #define 	VK_KEY_SPACE   32
 #define 	VK_KEY_APOSTROPHE   39 /* ' */
@@ -386,6 +394,7 @@ namespace Simpleton {
             Renderer* m_Renderer;
             InputsManager* m_Inputs;
             ResourceManager* m_Library;
+            AudioManager* m_Audio;
 
         public:
             Engine(int screenW, int screenH, char* title, unsigned int flags = 0); // init engine
@@ -404,6 +413,59 @@ namespace Simpleton {
             void SetTime(double time); // Set engine time
             
             void Stop(); // set m_isRunning to false
+    };
+
+    class Sound {
+        private:
+            unsigned int m_SoundId;
+            std::vector<char> m_Data;
+            int m_Format;
+            int m_Freq;
+
+        public:
+            Sound();
+            Sound(const char* filePath);
+            ~Sound();
+
+            bool LoadFile(const char* filePath);
+
+            unsigned int GetId() const;
+
+        private:
+            void Init();
+    };
+
+    class SoundSource {
+        private:
+            unsigned int m_SoundSourceId;
+        
+        public:
+            SoundSource();
+            void AttachSound(Sound* sound);
+
+            void SetPosition(float x, float y, float z);
+            void SetVelocity(float x, float y, float z);
+            void SetPitch(float pitch);
+            void SetGain(float gain);
+            void SetLooping(bool loop);
+
+            void Play();
+    };
+
+    class AudioManager {
+        friend class Engine; 
+
+        private:
+            Engine* m_Engine = nullptr;
+            void* m_Device;
+            void* m_Context;
+
+        public:
+            AudioManager();
+            
+        private:
+            void Init(Engine* engine);
+            void Terminate();
     };
 
     enum InputEventType {
@@ -448,20 +510,6 @@ namespace Simpleton {
             static void KeyboardCallbackDispatch(GLFWwindow* window, int key, int scancode, int action, int mods);
             static void MouseCallbackDispatch(GLFWwindow* window, int button, int action, int mods);
             static void MouseMoveDispatch(GLFWwindow* window, double xpos, double ypos);
-    };
-
-    class AudioManager {
-        friend class Engine; 
-
-        private:
-            Engine* m_Engine = nullptr;
-
-        public:
-            AudioManager();
-            
-        private:
-            void Init(Engine* engine);
-            void Terminate();
     };
 
     class Timer {

@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.7)
 project(GAME)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+message(STATUS "C++ Standard: ${CMAKE_CXX_STANDARD}")
+
 FILE(GLOB GAME_FILES src/*.cpp)
 
 ADD_EXECUTABLE( ${PROJECT_NAME} ${GAME_FILES} )

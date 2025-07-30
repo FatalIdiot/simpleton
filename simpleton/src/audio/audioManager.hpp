@@ -12,6 +12,8 @@ namespace Simpleton {
 
         private:
             Engine* m_Engine = nullptr;
+            ALCdevice* m_Device;
+            ALCcontext* m_Context;
 
         public:
             AudioManager();

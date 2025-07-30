@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.7)
 project(SIMPLETON_LIB)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+message(STATUS "C++ Standard: ${CMAKE_CXX_STANDARD}")
+
 FILE(GLOB SIMPLETON_FILES
     src/*.cpp
     src/graphics/*.cpp
@@ -20,6 +24,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/vendor/gla
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/vendor/openal-soft/include)
 
 if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/vendor/glfw/glfw3.lib)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/vendor/OpenAL32.lib)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/vendor/glfw/glfw3.lib)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/vendor/OpenAL32.lib)
 endif()

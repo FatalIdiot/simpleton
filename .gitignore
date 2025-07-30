@@ -4,7 +4,7 @@
 /game/build
 
 /GAME.exe
-/simpleton/bin/SIMPLETON_LIB.lib
-/simpleton/bin/api.hpp
+/simpleton/bin/*
 
 /simpleton/vendor/openal-soft/build
+/simpleton/vendor/OpenAL32.lib
