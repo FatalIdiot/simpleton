@@ -36,7 +36,7 @@ namespace Simpleton {
                         WriteErr(filePath, lineNum, "OpenAL: Invalid Name");
                         break;
                     case AL_INVALID_ENUM:
-                    WriteErr(filePath, lineNum, "OpenAL: Invalid Enum");
+                        WriteErr(filePath, lineNum, "OpenAL: Invalid Enum");
                         break;
                     case AL_INVALID_VALUE:
                         WriteErr(filePath, lineNum, "OpenAL: Invalid Value");
@@ -75,7 +75,7 @@ namespace Simpleton {
         private:
             // internal function to be wraped with type specific functions
             static void Write(std::string format) {
-                std::cout << format;
+                std::cerr << format;
             }
     };
 }
