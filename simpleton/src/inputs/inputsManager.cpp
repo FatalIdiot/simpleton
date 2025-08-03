@@ -1,10 +1,11 @@
 #include "inputsManager.hpp"
+#include "../logger.hpp"
 
 #include <iostream>
 
 namespace Simpleton {
     void InputsManager::Init(Engine* engine) {
-        printf("Init Inputs...\n");
+        LogMsg("Init Inputs...");
         m_Engine = engine;
 
         GLFWwindow* window = m_Engine->GetRenderer()->m_Window;
@@ -14,7 +15,7 @@ namespace Simpleton {
     }
 
     void InputsManager::Terminate() {
-        printf("Inputs Terminate...\n");
+        LogMsg("Inputs Terminate...");
     }
 
     void InputsManager::AddBinding(int key, std::function<void(InputEvent e)> func) {
@@ -31,8 +32,6 @@ namespace Simpleton {
         while (!m_Events.empty()) {
             InputEvent event = m_Events.front();
 
-            // printf("Event! Key: %u\n", event.key);
-            // printf("Mouse: %u, %u\n", event.mousePos.x, event.mousePos.y);
             for (auto binding : m_Bindings[event.key]) {
                 binding(event);
             }
@@ -42,7 +41,6 @@ namespace Simpleton {
     }
 
     void InputsManager::ProcessKey(InputEventType type, int key, int action) {
-        // printf("Key: %u, Action: %u\n", key, action);
         InputEvent newEvent(type, key, action, m_Engine->GetTime(), { m_MouseX, m_MouseY });
         m_Events.push(newEvent);
     }
@@ -50,7 +48,6 @@ namespace Simpleton {
     void InputsManager::MouseMove(double xpos, double ypos) {
         m_MouseX = static_cast<unsigned int>(xpos);
         m_MouseY = static_cast<unsigned int>(ypos);
-        // printf("%u, %u\n", m_MouseX, m_MouseY);
     }
 
     void InputsManager::KeyboardCallbackDispatch(GLFWwindow* window, int key, int scancode, int action, int mods)

@@ -1,5 +1,6 @@
 #include "mesh.hpp"
 #include "shaderUniformManager.hpp"
+#include "../logger.hpp"
 
 #include "glad/glad.h"
 
@@ -43,7 +44,7 @@ namespace Simpleton {
     }
 
     Mesh::~Mesh() {
-        printf("Terminating mesh...\n");
+        LogMsg("Terminating mesh...");
         Terminate();
     }
 

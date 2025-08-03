@@ -25,17 +25,17 @@ int main() {
         renderer->DepthTest(false);
 
         // Test moving rect
-        static int testX = 0;
-        static int velX = 1;
+        static float testX = 0;
+        static int velX = 300;
         renderer->FillRect(
             { 0.0f, 0.0f, 1.0f, 1.0f },
-            { testX, 500, 50, 50 }
+            { static_cast<int>(testX), 500, 50, 50 }
         );
-        testX += velX;
+        testX += velX * dt;
         if(velX > 0 && testX > 800 - 50)
-            velX = -1;
+            velX *= -1;
         if(velX < 0 && testX < 0)
-            velX = 1;
+            velX *= -1;
 
 
         // Test missing texture

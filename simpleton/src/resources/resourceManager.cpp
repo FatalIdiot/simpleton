@@ -1,10 +1,11 @@
 #include "../utils.hpp"
 #include "resourceManager.hpp"
 #include "texture.hpp"
+#include "../logger.hpp"
 
 namespace Simpleton {
     void ResourceManager::Init() {
-        printf("Resource Manager Init...\n");
+        LogMsg("Resource Manager Init...");
 
         // Create default texture and add to map
         const unsigned int defaultTextureSize = 5;
@@ -26,7 +27,7 @@ namespace Simpleton {
     }
 
     void ResourceManager::Terminate() {
-        printf("Resource Manager Terminate...\n");
+        LogMsg("Resource Manager Terminate...");
 
         // Delete all textures
         std::map<std::string, Texture*>::iterator it;

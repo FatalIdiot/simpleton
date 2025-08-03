@@ -1,4 +1,5 @@
 #include "texture.hpp"
+#include "../logger.hpp"
 
 #include "glad/glad.h"
 #define STB_IMAGE_IMPLEMENTATION
@@ -27,7 +28,7 @@ namespace Simpleton {
     }
 
     Texture::~Texture() {
-        printf("Terminating texture %u...\n", m_TextureId);
+        LogMsg("Terminating texture {}...", m_TextureId);
         glDeleteTextures(1, &m_TextureId);
 
         if(m_Data == nullptr)
@@ -75,8 +76,7 @@ namespace Simpleton {
         m_Data = stbi_load(filePath, &m_Width, &m_Height, &m_ChannelsCount, 0); 
 
         if(!m_Data) {
-            printf("Failed to load texture data!\n");
-            printf("File path: %s\n", filePath);
+            LogErr("Failed to load texture data!\nFile path: {}", filePath);
             return false;
         }
 
@@ -84,8 +84,8 @@ namespace Simpleton {
 
         GeneralLoad();
 
-        printf("Loaded texture %u from file: %s\n", m_TextureId, filePath);
-        printf("Width: %u, Height: %u, Channels: %u\n", m_Width, m_Height, m_ChannelsCount);
+        LogMsg("Loaded texture {} from file: {}", m_TextureId, filePath);
+        LogMsg("Width: {}, Height: {}, Channels: {}", m_Width, m_Height, m_ChannelsCount);
         m_isLoaded = true;
 
         return true;
@@ -100,8 +100,8 @@ namespace Simpleton {
 
         GeneralLoad();
 
-        printf("Loaded texture %u from data.\n", m_TextureId);
-        printf("Width: %u, Height: %u, Channels: %u\n", m_Width, m_Height, m_ChannelsCount);
+        LogMsg("Loaded texture {} from data.", m_TextureId);
+        LogMsg("Width: {}, Height: {}, Channels: {}", m_Width, m_Height, m_ChannelsCount);
         m_isLoaded = true;
 
         return true;

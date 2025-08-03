@@ -1,4 +1,5 @@
 #include "shader.hpp"
+#include "../logger.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -16,7 +17,7 @@ namespace Simpleton {
     }
 
     Shader::~Shader() {
-        printf("Terminating shader %u...\n", m_ShaderProgId);
+        LogMsg("Terminating shader {}...", m_ShaderProgId);
         Terminate();
     }
 
@@ -27,11 +28,13 @@ namespace Simpleton {
         glGetShaderiv(shader, GL_SHADER_SOURCE_LENGTH, &success);
         if(!success) {
             strcpy_s(m_ErrorLog, sizeof(m_ErrorLog), "Shader has no source code.");
+            LogErr("Shader has no source code.");
             return false;
         }
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if(!success) {
             strcpy_s(m_ErrorLog, sizeof(m_ErrorLog), "Shader not compiled or compiled unseccessfully.");
+            LogErr("Shader not compiled or compiled unseccessfully.");
             return false;
         }
 
@@ -45,7 +48,7 @@ namespace Simpleton {
     bool Shader::AddShaderSource(ShaderType type, const char* code) {
         int success;
         const char* shaderTypeStr = (type == ShaderType::VertexShader ? "Vertex" : "Fragment");
-        printf("Adding %s Shader...\n", shaderTypeStr);
+        LogMsg("Adding {} Shader...", shaderTypeStr);
         unsigned int shader = (type == ShaderType::VertexShader ? m_VertexShader : m_FragmentShader);
 
         glShaderSource(shader, 1, &code, 0);
@@ -54,7 +57,7 @@ namespace Simpleton {
         if(!success)
         {
             glGetShaderInfoLog(shader, 512, 0, m_ErrorLog);
-            printf("%s Shader Error: %s\n", shaderTypeStr, m_ErrorLog);
+            LogErr("{} Shader Error: {}", shaderTypeStr, m_ErrorLog);
             return false;
         }
 
@@ -64,7 +67,7 @@ namespace Simpleton {
     bool Shader::AddShaderFile(ShaderType type, const char* filePath) {
         std::ifstream file(filePath);
         if (!file.is_open()) {
-            printf("Error opening shader file: %s\n", filePath);
+            LogErr("Error opening shader file: {}", filePath);
             return false;
         }
 
@@ -77,16 +80,16 @@ namespace Simpleton {
     }
 
     bool Shader::Compile() {
-        printf("Compiling shader %u\n", m_ShaderProgId);
+        LogMsg("Compiling shader {}", m_ShaderProgId);
         int success;
 
         // Check both shaders for validity 
         if(!CheckShaderValid(ShaderType::VertexShader)) {
-            printf("Vertex Shader Error: %s\n", m_ErrorLog);
+            LogErr("Vertex Shader Error: {}", m_ErrorLog);
             return false;
         }
         if(!CheckShaderValid(ShaderType::FragmentShader)) {
-            printf("Fragment Shader Error: %s\n", m_ErrorLog);
+            LogErr("Fragment Shader Error: {}", m_ErrorLog);
             return false;
         }
 
@@ -97,7 +100,7 @@ namespace Simpleton {
         if(!success) {
             m_IsValid = false;
             glGetProgramInfoLog(m_ShaderProgId, 512, 0, m_ErrorLog);
-            printf("Shader Compilation Error: %s\n", m_ErrorLog);
+            LogErr("Shader Compilation Error: {}", m_ErrorLog);
             return false;
         }
 

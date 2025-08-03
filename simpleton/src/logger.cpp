@@ -6,8 +6,4 @@ namespace Simpleton {
     void Log::SetVerbosity(LogType verbosityType) {
         m_Verbosity = verbosityType;
     }
-
-    void Log::Write(LogType type, std::string str) {
-
-    }
 }

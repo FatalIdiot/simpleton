@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include "engine.hpp"
+#include "logger.hpp"
 
 #include "glad/glad.h"
 #include "glfw3.h"
@@ -18,7 +19,7 @@ void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 }
 
 bool InitWindow(Simpleton::Renderer* renderer, void* engine) {
-    printf("Init Window...\n");
+    LogMsg("Init Window...");
     // Set pointer to engine instance to access it in callbacks
     glfwSetWindowUserPointer(renderer->m_Window, reinterpret_cast<void *>(engine));
 
@@ -27,17 +28,17 @@ bool InitWindow(Simpleton::Renderer* renderer, void* engine) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glfwSetFramebufferSizeCallback(renderer->m_Window, FramebufferSizeCallback);
 
-    printf("Window init done...\n");
+    LogMsg("Window init done...");
     return true;
 }
 
 namespace Simpleton {
     bool Renderer::Init(void* engine, GLFWwindow* window) {
-        printf("Renderer Init...\n");
+        LogMsg("Renderer Init...");
         m_Engine = engine;
         m_Window = window;
         if(!InitWindow(this, engine)) {
-            printf("InitWindow failed!\n");
+            LogErr("InitWindow failed!");
             return false;
         }
 
@@ -96,7 +97,7 @@ namespace Simpleton {
     }
 
     void Renderer::Terminate() {
-        printf("Renderer Terminate...\n");
+        LogMsg("Renderer Terminate...");
         glfwDestroyWindow(m_Window);
         glfwTerminate();
     }
