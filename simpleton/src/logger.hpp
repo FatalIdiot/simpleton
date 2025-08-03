@@ -4,8 +4,17 @@
 #include <format>
 #include <iostream>
 
+// OpenAL errors
+#define AL_NO_ERROR             0
+#define AL_INVALID_NAME         0xA001
+#define AL_INVALID_ENUM         0xA002
+#define AL_INVALID_VALUE        0xA003
+#define AL_INVALID_OPERATION    0xA004
+#define AL_OUT_OF_MEMORY        0xA005
+
 #define LogErr(format, ...) Simpleton::Log::WriteErr(__FILE__, __LINE__, format, __VA_ARGS__)
 #define LogMsg(format, ...) Simpleton::Log::WriteMsg(format, __VA_ARGS__)
+#define LogOal() Simpleton::Log::WriteOal(alGetError(), __FILE__, __LINE__)
 
 namespace Simpleton {
     enum LogType {
@@ -19,6 +28,29 @@ namespace Simpleton {
 
         public:
             static void SetVerbosity(LogType verbosityType);
+
+            // Log last OpenAL error
+            static void WriteOal(int errorCode, const char* filePath, int lineNum) {
+                switch(errorCode) {
+                    case AL_INVALID_NAME:
+                        WriteErr(filePath, lineNum, "OpenAL: Invalid Name");
+                        break;
+                    case AL_INVALID_ENUM:
+                    WriteErr(filePath, lineNum, "OpenAL: Invalid Enum");
+                        break;
+                    case AL_INVALID_VALUE:
+                        WriteErr(filePath, lineNum, "OpenAL: Invalid Value");
+                        break;
+                    case AL_INVALID_OPERATION:
+                        WriteErr(filePath, lineNum, "OpenAL: Invalid Operation");
+                        break;
+                    case AL_OUT_OF_MEMORY:
+                        WriteErr(filePath, lineNum, "OpenAL: Out of Memory");
+                        break;
+                    default:
+                        return;
+                }
+            }
 
             template<typename... Args>
             static void WriteMsg(std::format_string<Args...> format, Args&&... args) {

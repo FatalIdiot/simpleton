@@ -1,43 +1,40 @@
 #include "audioManager.hpp" 
+#include "../logger.hpp"
 
 namespace Simpleton {
     AudioManager::AudioManager() {
     }
 
     void AudioManager::Init(Engine* engine) {
-        printf("Init Audio...\n");
+        LogMsg("Init Audio...");
         m_Engine = engine;
 
         m_Device = alcOpenDevice(nullptr);
         if (m_Device == nullptr) {
-            printf("AudioManager: error opening device!\n");
+            LogErr("AudioManager: error opening device!\n");
             return;
         }
 
         m_Context = alcCreateContext(m_Device, nullptr);
         if (m_Device == nullptr) {
-            printf("AudioManager: error creating context!\n");
+            LogErr("AudioManager: error creating context!\n");
             return;
         }
 
         if (!alcMakeContextCurrent(m_Context)) {
-            printf("AudioManager: error making current context!\n");
+            LogErr("AudioManager: error making current context!\n");
             return;
         }
 
         ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
-        alListener3f(AL_POSITION, 0, 0, 1.0f);
-        alListener3f(AL_VELOCITY, 0, 0, 0);
-        alListenerfv(AL_ORIENTATION, listenerOri);
-
-        ALCenum error = alGetError();
-        if (error != AL_NO_ERROR)
-                printf("Error!!!\n");
+        alListener3f(AL_POSITION, 0, 0, 1.0f); LogOal();
+        alListener3f(AL_VELOCITY, 0, 0, 0); LogOal();
+        alListenerfv(AL_ORIENTATION, listenerOri); LogOal();
     }
 
     void AudioManager::Terminate() {
-        alcMakeContextCurrent(nullptr);
-        alcDestroyContext(m_Context);
-        alcCloseDevice(m_Device);
+        alcMakeContextCurrent(nullptr); LogOal();
+        alcDestroyContext(m_Context); LogOal();
+        alcCloseDevice(m_Device); LogOal();
     }
 }
