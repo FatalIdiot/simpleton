@@ -61,6 +61,7 @@ namespace Simpleton {
                     return;
 
                 Log::Write(
+                    LogType::Msg,
                     std::format(format, std::forward<Args>(args)...) + '\n'
                 );
             }
@@ -71,6 +72,7 @@ namespace Simpleton {
                     return;
 
                 Log::Write(
+                    LogType::Error,
                     std::format("\nError [{} : {}]:\n", filePath, lineNum) + std::format(format, std::forward<Args>(args)...) + "\n\n"
                 );
             }

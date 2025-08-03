@@ -5,6 +5,7 @@
 namespace Simpleton {
     void Sound::Init() {
         alGenBuffers(1, &m_SoundId);
+        LogMsg("Generated sound {}", m_SoundId);
     }
 
     Sound::Sound() {

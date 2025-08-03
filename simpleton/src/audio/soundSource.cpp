@@ -4,6 +4,7 @@
 namespace Simpleton {
     SoundSource::SoundSource() {
         alGenSources(1, &m_SoundSourceId); LogOal();
+        LogMsg("Generated sound source {}", m_SoundSourceId);
 
         SetPitch(1.0f); LogOal();
         SetGain(1.0f); LogOal();
@@ -13,6 +14,7 @@ namespace Simpleton {
 
     SoundSource::~SoundSource() {
         LogMsg("Deleting sound source {}", m_SoundSourceId);
+        alSourcei(m_SoundSourceId, AL_BUFFER, 0); LogOal();
         alDeleteSources(1, &m_SoundSourceId); LogOal();
     }
 
