@@ -2,8 +2,6 @@
 
 namespace Simpleton {
     unsigned char Log::m_Verbosity = 1;
-
-    void Log::SetVerbosity(LogType verbosityType) {
-        m_Verbosity = verbosityType;
-    }
+    std::ofstream Log::logFile;
+    bool Log::enableFileLog = true;
 }

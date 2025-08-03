@@ -58,6 +58,7 @@ namespace Simpleton {
     }
 
     Engine::Engine(int screenW, int screenH, char* title, unsigned int flags) {
+        Log::Init();
         LogMsg("Engine Init...");
         GLFWwindow* window;
         bool initSuccess = InitOpenGL(window, screenW, screenH, title, flags);
@@ -110,6 +111,8 @@ namespace Simpleton {
 
         m_Audio->Terminate();
         delete m_Audio;
+
+        Log::Terminate();
     }
 
     void Engine::Run(std::function<void(float dt)> Update)  {

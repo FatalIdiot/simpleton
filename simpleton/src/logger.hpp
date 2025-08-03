@@ -6,6 +6,7 @@
 #include <string>
 #include <format>
 #include <iostream>
+#include <fstream>
 
 // OpenAL errors
 #define AL_NO_ERROR             0
@@ -28,9 +29,24 @@ namespace Simpleton {
     class Log {
         private:
             static unsigned char m_Verbosity;
+            static std::ofstream logFile;
+            static bool enableFileLog;
 
         public:
-            static void SetVerbosity(LogType verbosityType);
+            static void Init() {
+                logFile.open("simpleton_log.txt");
+            }
+            static void Terminate() {
+                logFile.close();
+            }
+
+            static void SetVerbosity(LogType verbosityType) {
+                m_Verbosity = verbosityType;
+            }
+
+            static void SetFileOutput(bool fileLog) {
+                enableFileLog = fileLog;
+            }
 
             // Log last OpenAL error
             static void WriteOal(int errorCode, const char* filePath, int lineNum) {
@@ -84,6 +100,11 @@ namespace Simpleton {
                     std::cout << format;
                 else
                     std::cerr << format;
+
+                if(enableFileLog) {
+                    logFile << format;
+                    logFile.flush();
+                }
             }
     };
 }
