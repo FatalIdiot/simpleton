@@ -11,6 +11,11 @@ namespace Simpleton {
         SetLooping(false); LogOal();
     }
 
+    SoundSource::~SoundSource() {
+        LogMsg("Deleting sound source {}", m_SoundSourceId);
+        alDeleteSources(1, &m_SoundSourceId); LogOal();
+    }
+
     void SoundSource::AttachSound(Sound* sound) {
         LogMsg("Attaching sound {} to source {}", sound->GetId(), m_SoundSourceId);
         alSourcei(m_SoundSourceId, AL_BUFFER, sound->GetId()); LogOal();

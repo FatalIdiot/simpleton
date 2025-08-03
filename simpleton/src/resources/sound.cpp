@@ -1,5 +1,6 @@
 #include "sound.hpp"
 #include "../loaders/audioWavLoader.hpp"
+#include "../logger.hpp"
 
 namespace Simpleton {
     void Sound::Init() {
@@ -16,7 +17,8 @@ namespace Simpleton {
     }
 
     Sound::~Sound() {
-        alDeleteBuffers(1, &m_SoundId); 
+        LogMsg("Deleting sound {}", m_SoundId);
+        alDeleteBuffers(1, &m_SoundId); LogOal();
     }
 
     bool Sound::LoadFile(const char* filePath) {

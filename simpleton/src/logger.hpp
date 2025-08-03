@@ -1,3 +1,6 @@
+/*
+    Class for engine debugging, internal usage, not meant to be used in game projects the engine is used in.
+*/
 #pragma once
 
 #include <string>
@@ -74,8 +77,11 @@ namespace Simpleton {
 
         private:
             // internal function to be wraped with type specific functions
-            static void Write(std::string format) {
-                std::cerr << format;
+            static void Write(LogType type, std::string format) {
+                if(type == LogType::Msg)
+                    std::cout << format;
+                else
+                    std::cerr << format;
             }
     };
 }

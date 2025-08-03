@@ -33,8 +33,8 @@ namespace Simpleton {
     }
 
     void AudioManager::Terminate() {
-        alcMakeContextCurrent(nullptr); LogOal();
-        alcDestroyContext(m_Context); LogOal();
-        alcCloseDevice(m_Device); LogOal();
+        alcMakeContextCurrent(nullptr);
+        alcDestroyContext(m_Context);
+        alcCloseDevice(m_Device);
     }
 }

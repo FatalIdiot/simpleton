@@ -9,6 +9,7 @@ namespace Simpleton {
         
         public:
             SoundSource();
+            ~SoundSource();
             void AttachSound(Sound* sound);
 
             void SetPosition(float x, float y, float z);
