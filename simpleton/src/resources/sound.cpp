@@ -17,6 +17,11 @@ namespace Simpleton {
         LoadFile(filePath);
     }
 
+    Sound::Sound(int format, int freq, int size, void* data) {
+        Init();
+        LoadData(format, freq, size, data);
+    }
+
     Sound::~Sound() {
         LogMsg("Deleting sound {}", m_SoundId);
         alDeleteBuffers(1, &m_SoundId); LogOal();
@@ -27,6 +32,11 @@ namespace Simpleton {
 
         alBufferData(m_SoundId, wavFile.format, wavFile.data.data(), static_cast<int>(wavFile.data.size()), wavFile.frequency);
         
+        return true;
+    }
+
+    bool Sound::LoadData(int format, int freq, int size, void* data) {
+        alBufferData(m_SoundId, format, data, size, freq);
         return true;
     }
 

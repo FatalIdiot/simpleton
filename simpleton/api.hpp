@@ -323,11 +323,68 @@ namespace Simpleton {
             void GeneralLoad();
     };
 
+    class Sound {
+        private:
+            unsigned int m_SoundId;
+            std::vector<char> m_Data;
+            int m_Format;
+            int m_Freq;
+
+        public:
+            Sound();
+            Sound(const char* filePath);
+            Sound(int format, int freq, int size, void* data);
+            ~Sound();
+
+            bool LoadFile(const char* filePath);
+            bool LoadData(int format, int freq, int size, void* data);
+
+            unsigned int GetId() const;
+
+        private:
+            void Init();
+    };
+
+    class SoundSource {
+        private:
+            unsigned int m_SoundSourceId;
+        
+        public:
+            SoundSource();
+            ~SoundSource();
+            void AttachSound(Sound* sound);
+
+            void SetPosition(float x, float y, float z);
+            void SetVelocity(float x, float y, float z);
+            void SetPitch(float pitch);
+            void SetGain(float gain);
+            void SetLooping(bool loop);
+
+            void Play();
+    };
+
+    class AudioManager {
+        friend class Engine; 
+
+        private:
+            Engine* m_Engine = nullptr;
+            void* m_Device;
+            void* m_Context;
+
+        public:
+            AudioManager();
+            
+        private:
+            void Init(Engine* engine);
+            void Terminate();
+    };
+
     class ResourceManager {
         friend class Engine; 
 
         private:
             std::map<std::string, Texture*> m_Textures;
+            std::map<std::string, Sound*> m_Sounds;
 
         public:
             Texture* GetTexture(const char* name);
@@ -335,6 +392,11 @@ namespace Simpleton {
             void AddTexture(const char* name, const char* filePath, unsigned char slot = 0);
             void AddTexture(const char* name, int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
     
+            Sound* GetSound(const char* name);
+            void AddSound(const char* name, Sound* sound);
+            void AddSound(const char* name, const char* filePath);
+            void AddSound(const char* name, int format, int freq, int size, void* data);
+
         private:
             void Init();
             void Terminate();
@@ -413,60 +475,6 @@ namespace Simpleton {
             void SetTime(double time); // Set engine time
             
             void Stop(); // set m_isRunning to false
-    };
-
-    class Sound {
-        private:
-            unsigned int m_SoundId;
-            std::vector<char> m_Data;
-            int m_Format;
-            int m_Freq;
-
-        public:
-            Sound();
-            Sound(const char* filePath);
-            ~Sound();
-
-            bool LoadFile(const char* filePath);
-
-            unsigned int GetId() const;
-
-        private:
-            void Init();
-    };
-
-    class SoundSource {
-        private:
-            unsigned int m_SoundSourceId;
-        
-        public:
-            SoundSource();
-            ~SoundSource();
-            void AttachSound(Sound* sound);
-
-            void SetPosition(float x, float y, float z);
-            void SetVelocity(float x, float y, float z);
-            void SetPitch(float pitch);
-            void SetGain(float gain);
-            void SetLooping(bool loop);
-
-            void Play();
-    };
-
-    class AudioManager {
-        friend class Engine; 
-
-        private:
-            Engine* m_Engine = nullptr;
-            void* m_Device;
-            void* m_Context;
-
-        public:
-            AudioManager();
-            
-        private:
-            void Init(Engine* engine);
-            void Terminate();
     };
 
     enum InputEventType {

@@ -7,9 +7,9 @@ int main() {
     engine.GetRenderer()->SetClearColor(0.0f, 0.0f, 0.0f);
 
     // Play test sound on Space key press
-    Simpleton::Sound testSound("assets/test.wav");
+    engine.GetLibrary()->AddSound("test", "assets/test.wav");
     Simpleton::SoundSource soundSource;
-    soundSource.AttachSound(&testSound);
+    soundSource.AttachSound(engine.GetLibrary()->GetSound("test"));
     engine.GetInputs()->AddBinding(VK_KEY_SPACE, [&soundSource](Simpleton::InputEvent e){
         if(e.action != 1)
             return;
@@ -39,8 +39,8 @@ int main() {
 
 
         // Test missing texture
-        Simpleton::Rect<int> destRect = {0, 0, 500, 500};
-        renderer->BlitTexture(engine.GetLibrary()->GetTexture("test"), destRect);
+        // Simpleton::Rect<int> destRect = {0, 0, 500, 500};
+        // renderer->BlitTexture(engine.GetLibrary()->GetTexture("test"), destRect);
 
         renderer->FillTriangle(
             { 1.0f, 1.0f, 1.0f, 1.0f },

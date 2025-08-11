@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 4.1)
 project(SIMPLETON_LIB)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -11,6 +11,7 @@ FILE(GLOB SIMPLETON_FILES
     src/audio/*.cpp
     src/inputs/*.cpp
     src/resources/*.cpp
+    src/loaders/*.cpp
     vendor/glad/glad.c
 )
 

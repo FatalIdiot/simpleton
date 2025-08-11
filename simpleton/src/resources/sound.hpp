@@ -17,9 +17,11 @@ namespace Simpleton {
         public:
             Sound();
             Sound(const char* filePath);
+            Sound(int format, int freq, int size, void* data);
             ~Sound();
 
             bool LoadFile(const char* filePath);
+            bool LoadData(int format, int freq, int size, void* data);
 
             unsigned int GetId() const;
 

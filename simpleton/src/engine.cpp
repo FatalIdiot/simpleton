@@ -81,11 +81,11 @@ namespace Simpleton {
         m_Inputs = new InputsManager();
         m_Inputs->Init(this);
 
-        m_Library = new ResourceManager();
-        m_Library->Init();
-
         m_Audio = new AudioManager();
         m_Audio->Init(this);
+
+        m_Library = new ResourceManager();
+        m_Library->Init();
 
         ShaderUniformManager::SetEngine(this);
 
@@ -132,6 +132,8 @@ namespace Simpleton {
             glfwPollEvents();
             m_Inputs->PollInputEvents();
         }
+
+        LogMsg("Out of game loop...");
     }
 
     Renderer* Engine::GetRenderer() {

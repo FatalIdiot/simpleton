@@ -1,9 +1,16 @@
-Simpleton is a framework for game development.
+# Simpleton Game Engine
+Simpleton is a framework for game development, that likes to be called a game engine. It uses OpenGL for graphics and OpenAL for audio output. The aim for developing Simpleton is not to make a new big engine, but for me to learn C++ and everything gamedev related.
 
 # Contents
+**Building:** <br />
++ [Compile Simpleton](#compile-simpleton)
++ [Compile Demo Game](#compile-demo-game)
++ [All together](#all-together)
++ [Cleaning](#cleaning) <br />
+
 **Usage:** <br />
-- [Primitives](#primitives)
-- [Rendering](#rendering) <br />
++ [Primitives](#primitives)
++ [Rendering](#rendering) <br />
 
 **Entities:** <br />
 + [Engine](#engine)
@@ -13,21 +20,26 @@ Simpleton is a framework for game development.
 + [Mesh](#mesh)
 + [Shader](#shader)
 + [Texture](#texture)
-+ [Shader Uniform Manager](#shader-uniform-manager)<br />
++ [Shader Uniform Manager](#shader-uniform-manager)
++ [Audio Manager](#audio-manager)
++ [Sound Source](#sound-source)
++ [Sound](#sound)
++ [Resource Manager](#resource-manager)
 
-# Compilation
+# Building
 ### Compile Simpleton
+Before building Simpleton, we need to build OpeanAL static lib. To do it run `build_openal.bat`, it will build the library and place the file into the `vendor` directory.
 To compile Simpleton run the `build_engine.bat` file.
-This will remove previous build files, create and compile a cmake build. After the process is done, it will copy the resulting `SIMPLETON_LIB.lib` static library file, `glfw3.lib` dependancy and the `api.h` header file to the `simpleton/bin` folder.
+This will remove previous build files, create and compile a cmake build. After the process is done, it will copy the resulting `SIMPLETON_LIB.lib` static library file, `OpenAL32.lib`, `glfw3.lib` dependancies and the `api.h` header file to the `simpleton/bin` folder.
 
 ### Compile Demo Game
 To compile the demo run the `build_game.bat` file.
 This will remove previous build files, create and compile a cmake build.
 Cmake uses Simpleton dependancy files from `simpleton/bin`, created when Simpleton is compiled. After cmake is done, the `GAME.exe` executable file will be copied to the root.
-To compile, `SIMPLETON_LIB.lib` and `glfw3.lib` static libraries must be linked, and `api.h` must be included to the project. All of this is automatically done for the demo project.
+To compile, `SIMPLETON_LIB.lib`, `OpenAL32.lib` (with system audio libraries, in case or Windows it's `avrt`, `ole32`, `winmm`, `user32`) and `glfw3.lib` static libraries must be linked, and `api.h` must be included to the project. You can fine an example of a CMake file in the demo project.
 
 ### All together
-Running the `build.bat` file will run both of the above.
+Running the `build.bat` file will run all of the above.
 
 ### Cleaning
 To delete all the buid data run the `clear.bat` file.
@@ -60,6 +72,7 @@ For `FillCircle` you can specify the number of points that will form the circle,
 - `GetRenderer()` - returns a pointer to the Renderer instance
 - `GetInputs()` - returns a pointer to the Inputs instance
 - `GetLibrary()` - returns a pointer to the Resource Manager instance
+- `GetAudio()` - returns a pointer to the Audio Manager instance
 - `CaptureCursor(bool setCapture)` - captures the cursor inside the window
 - `GetTime()` - returns a `double` of time in seconds
 - `SetTime(double time)` - set the time in seconds
@@ -105,7 +118,7 @@ Timer allows to take time measurements. It has the following functions: <br />
 - `AddBinding(int key, std::function<void(InputEvent e)> func)` - adds a function to the key. Function takes a InputEvent object.
 - `RemoveBinding(int key)` - removes bindings from a key.
 
-Allows to bind keyboard and mouse buttons to functions. <br />
+Manager, contained in the Engine instance. Allows to bind keyboard and mouse buttons to functions. <br />
 `InputEvent` has following fields: <br />
 - InputEventType type;
 - int key;
@@ -259,3 +272,53 @@ Textures are binded to a slot, to be able to use multiple textures in a shader. 
 
 This class controls uniforms, that must be present in all shaders. It is a static class, that has a pointer to the Engine, since multiple Engine instances may be used in the code. The pointer is set with `SetEngine` static method, that is called in the Engine constructor. It can be called from game's code if needed. <br />
 It works by calling the `SetData` static method inside the `Mesh.Draw()`, to pass data right before a draw call. The data is set for the currently active shader program. The `SetData` method is public and can be called at any place if needed. <br />
+
+
+
+### Audio Manager
+
+Manager, contained in the Engine instance. Initializes OpenAL at engine startup.
+
+
+
+### Sound Source
+
+**Methods:**
+- `AttachSound(Sound* sound)` - used to bind a sound to the source
+- `SetPosition(float x, float y, float z)`
+- `SetVelocity(float x, float y, float z)`
+- `SetPitch(float pitch)`
+- `SetGain(float gain)`
+- `SetLooping(bool loop)` - sets if the sound will be looped when played
+- `Play()` - play attached sound
+
+An OpenAL source of sound. Controls all of settings to properly play sound. At the moment the Listener of the sound is always at coords `{0, 0, 0}`, so the sound source position is the only thing that dictates where the sound is coming from.
+
+
+
+### Sound
+
+**Methods:**
+- `Sound(const char* filePath)` - constructor to call `LoadFile` on init
+- `Sound(int format, int freq, int size, void* data)` - constructor to call `LoadData` on init
+- `LoadFile(const char* filePath)` - loads the sound data from a file (WAV only for the moment)
+- `LoadData(int format, int freq, int size, void* data)` - loads the sound data from the data array provided
+- `GetId()` - gets the OpenAL sound ID
+
+OpenAL sound that is used in Sound Source. Currently only WAV files are supported to load sound from file.
+
+
+
+### Resource Manager
+
+**Methods:**
+- `GetTexture(const char* name)` - returns a pointer to the texture stored in manager under the `name`
+- `AddTexture(const char* name, Texture* texture)` - stores the texture
+- `AddTexture(const char* name, const char* filePath, unsigned char slot = 0)` - adds a texture from file
+- `AddTexture(const char* name, int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0)` - adds a texure from file
+- `GetSound(const char* name)` - returns a pointer to the sound stored in manager under the `name`
+- `AddSound(const char* name, Sound* sound)` - stores the sound
+- `AddSound(const char* name, const char* filePath)` - adds a sound from file
+- `AddSound(const char* name, int format, int freq, int size, void* data)`- adds a sound from data
+
+Manager, contained in the Engine instance. Containes the resources, `textures` and `sounds`.

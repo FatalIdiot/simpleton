@@ -9,10 +9,10 @@ cd build
 cmake ..
 
 IF %BUILD_MODE% == "DEBUG" (
-    cmake --build .
+    cmake --build . --parallel
 )
 IF %BUILD_MODE% == "RELEASE" (
-    cmake --build . --config Release
+    cmake --build . --parallel --config Release
 )
 
 cd ../..
