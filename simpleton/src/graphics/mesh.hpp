@@ -35,7 +35,7 @@ namespace Simpleton {
             void SetAttributes(MeshAttribute attributes[], short count); // Add all attributes as array
             void AddAttribute(MeshAttribute newAttribute); // Add attribute to the list
             void ClearAttributes();
-            unsigned int GetAttribCount();
+            unsigned int GetAttribCount() const;
             void EnableAttribute(short index);
             void DisableAttribute(short index);
 
@@ -43,8 +43,8 @@ namespace Simpleton {
             void SetIndexData(unsigned int* data, unsigned int count);
             void RemoveIndexData();
 
-            void Bind();
-            void Draw();
+            void Bind() const;
+            void Draw() const;
 
         private:
             void InitMesh();

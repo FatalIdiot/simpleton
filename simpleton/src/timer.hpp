@@ -27,7 +27,7 @@ namespace Simpleton {
             float GetPassedTime(); // get time since Start
             float Elapsed(); // get time from last Elapsed call or from timer start
 
-            bool isRunning();
-            bool isPaused();
+            bool isRunning() const;
+            bool isPaused() const;
     };
 }

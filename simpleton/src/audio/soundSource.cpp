@@ -43,7 +43,7 @@ namespace Simpleton {
         alSourcei(m_SoundSourceId, AL_LOOPING, loop ? AL_TRUE : AL_FALSE); LogOal();
     }
 
-    void SoundSource::Play() {
+    void SoundSource::Play() const {
         alSourcePlay(m_SoundSourceId); LogOal();
     }
 }

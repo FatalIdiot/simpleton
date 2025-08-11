@@ -115,7 +115,7 @@ namespace Simpleton {
         m_Attributes.clear();
     }
 
-    unsigned int Mesh::GetAttribCount() {
+    unsigned int Mesh::GetAttribCount() const {
         return static_cast<short>(m_Attributes.size());
     }
 
@@ -127,7 +127,7 @@ namespace Simpleton {
         glDisableVertexAttribArray(index);
     }
 
-    void Mesh::Bind() {
+    void Mesh::Bind() const {
         glBindVertexArray(m_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
         if(m_EBO != 0)
@@ -156,7 +156,7 @@ namespace Simpleton {
         m_IndexCount = 0;
     }
 
-    void Mesh::Draw() {
+    void Mesh::Draw() const {
         Bind();
 
         // Set global uniforms for current shader

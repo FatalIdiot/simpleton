@@ -52,11 +52,11 @@ namespace Simpleton {
         return timePassed.count();
     }
 
-    bool Timer::isRunning() {
+    bool Timer::isRunning() const {
         return m_State == TimerState::Running;
     }
 
-    bool Timer::isPaused() {
+    bool Timer::isPaused() const {
         return m_State == TimerState::Paused;
     }
 }

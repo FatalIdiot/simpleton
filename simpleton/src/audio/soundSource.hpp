@@ -18,6 +18,6 @@ namespace Simpleton {
             void SetGain(float gain);
             void SetLooping(bool loop);
 
-            void Play();
+            void Play() const;
     };
 }

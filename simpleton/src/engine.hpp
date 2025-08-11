@@ -34,13 +34,13 @@ namespace Simpleton {
 
             void Run(std::function<void(float dt)> Update); // start game loop, lambda function will be called each frame
 
-            Renderer* GetRenderer();
-            InputsManager* GetInputs();
-            ResourceManager* GetLibrary();
-            AudioManager* GetAudio();
+            Renderer* GetRenderer() const;
+            InputsManager* GetInputs() const;
+            ResourceManager* GetLibrary() const;
+            AudioManager* GetAudio() const;
 
             void CaptureCursor(bool setCapture); // Hide cursor and cature it inside window
-            double GetTime(); // Get time in seconds since engine start
+            double GetTime() const; // Get time in seconds since engine start
             void SetTime(double time); // Set engine time
             
             void Stop(); // set m_isRunning to false

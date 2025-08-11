@@ -136,23 +136,27 @@ namespace Simpleton {
         LogMsg("Out of game loop...");
     }
 
-    Renderer* Engine::GetRenderer() {
+    Renderer* Engine::GetRenderer() const {
         return m_Renderer;
     }
 
-    InputsManager* Engine::GetInputs() {
+    InputsManager* Engine::GetInputs() const {
         return m_Inputs;
     }
 
-    ResourceManager* Engine::GetLibrary() {
+    ResourceManager* Engine::GetLibrary() const {
         return m_Library;
+    }
+
+    AudioManager* Engine::GetAudio() const {
+        return m_Audio;
     }
 
     void Engine::CaptureCursor(bool setCapture) {
         glfwSetInputMode(m_Renderer->m_Window, GLFW_CURSOR, setCapture ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
     }
 
-    double Engine::GetTime() {
+    double Engine::GetTime() const {
         return glfwGetTime();
     }
 

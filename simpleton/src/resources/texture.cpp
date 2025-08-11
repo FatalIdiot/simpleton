@@ -37,7 +37,7 @@ namespace Simpleton {
             stbi_image_free(m_Data);
     }
 
-    unsigned int Texture::GetId() {
+    unsigned int Texture::GetId() const {
         return m_TextureId;
     }
 
@@ -120,7 +120,7 @@ namespace Simpleton {
         m_FilteringMode = filter;
     }
 
-    void Texture::Bind() {
+    void Texture::Bind() const {
         glActiveTexture(GL_TEXTURE0 + m_Slot);
 
         glBindTexture(GL_TEXTURE_2D, m_TextureId);
@@ -129,7 +129,7 @@ namespace Simpleton {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_FilteringMode);
     }
 
-    void Texture::Unbind() {
+    void Texture::Unbind() const {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 }

@@ -29,8 +29,8 @@ namespace Simpleton {
             void SetUniform(const char* name, float x, float y, float z, float w);
             void SetUniform(const char* name, int i);
 
-            void Bind();
-            void Unbind();
+            void Bind() const;
+            void Unbind() const;
 
         private:
             bool CheckShaderValid(ShaderType type);

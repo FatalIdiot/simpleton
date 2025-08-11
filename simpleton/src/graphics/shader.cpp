@@ -118,11 +118,11 @@ namespace Simpleton {
         glUniform1i(uniformLocation, i);
     }
 
-    void Shader::Bind() {
+    void Shader::Bind() const {
         glUseProgram(m_ShaderProgId);
     }
 
-    void Shader::Unbind() {
+    void Shader::Unbind() const {
         glUseProgram(0);
     }
 

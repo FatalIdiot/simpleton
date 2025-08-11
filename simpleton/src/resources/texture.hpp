@@ -30,15 +30,15 @@ namespace Simpleton {
             Texture(int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
             ~Texture();
 
-            unsigned int GetId();
+            unsigned int GetId() const;
             bool IsLoaded();
             void SetSlot(unsigned char slot);
 
             bool LoadFile(const char* filePath);
             bool LoadData(int width, int height, int channelsCount, unsigned char* data);
 
-            void Bind();
-            void Unbind();
+            void Bind() const;
+            void Unbind() const;
 
             void SetFiltering(TextureFiltering filteringMode);
 

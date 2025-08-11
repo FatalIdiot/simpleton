@@ -224,7 +224,7 @@ namespace Simpleton {
             void SetAttributes(MeshAttribute attributes[], short count); // Add all attributes as array
             void AddAttribute(MeshAttribute newAttribute); // Add attribute to the list
             void ClearAttributes();
-            unsigned int GetAttribCount();
+            unsigned int GetAttribCount() const;
             void EnableAttribute(short index);
             void DisableAttribute(short index);
 
@@ -232,8 +232,8 @@ namespace Simpleton {
             void SetIndexData(unsigned int* data, unsigned int count);
             void RemoveIndexData();
 
-            void Bind();
-            void Draw();
+            void Bind() const;
+            void Draw() const;
 
         private:
             void InitMesh();
@@ -269,8 +269,8 @@ namespace Simpleton {
             void SetUniform(const char* name, float x, float y, float z, float w);
             void SetUniform(const char* name, int i);
 
-            void Bind();
-            void Unbind();
+            void Bind() const;
+            void Unbind() const;
 
         private:
             bool CheckShaderValid(ShaderType type);
@@ -306,15 +306,15 @@ namespace Simpleton {
             Texture(int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
             ~Texture();
 
-            unsigned int GetId();
+            unsigned int GetId() const;
             bool IsLoaded();
             void SetSlot(unsigned char slot);
 
             bool LoadFile(const char* filePath);
             bool LoadData(int width, int height, int channelsCount, unsigned char* data);
 
-            void Bind();
-            void Unbind();
+            void Bind() const;
+            void Unbind() const;
 
             void SetFiltering(TextureFiltering filteringMode);
 
@@ -360,7 +360,7 @@ namespace Simpleton {
             void SetGain(float gain);
             void SetLooping(bool loop);
 
-            void Play();
+            void Play() const;
     };
 
     class AudioManager {
@@ -465,13 +465,13 @@ namespace Simpleton {
 
             void Run(std::function<void(float dt)> Update); // start game loop, lambda function will be called each frame
 
-            Renderer* GetRenderer();
-            InputsManager* GetInputs();
-            ResourceManager* GetLibrary();
-            AudioManager* GetAudio();
+            Renderer* GetRenderer() const;
+            InputsManager* GetInputs() const;
+            ResourceManager* GetLibrary() const;
+            AudioManager* GetAudio() const;
 
             void CaptureCursor(bool setCapture); // Hide cursor and cature it inside window
-            double GetTime(); // Get time in seconds since engine start
+            double GetTime() const; // Get time in seconds since engine start
             void SetTime(double time); // Set engine time
             
             void Stop(); // set m_isRunning to false
@@ -542,8 +542,8 @@ namespace Simpleton {
             float GetPassedTime(); // get time since Start
             float Elapsed(); // get time from last Elapsed call or from timer start
 
-            bool isRunning();
-            bool isPaused();
+            bool isRunning() const;
+            bool isPaused() const;
     };
 
     class ShaderUniformManager {
