@@ -1,5 +1,8 @@
 #pragma once
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 namespace Simpleton {
     enum TextureLoadType {
         File,
@@ -26,7 +29,7 @@ namespace Simpleton {
 
         public:
             Texture(unsigned char slot = 0);
-            Texture(const char* filePath, unsigned char slot = 0);
+            Texture(fs::path filePath, unsigned char slot = 0);
             Texture(int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
             ~Texture();
 
@@ -34,7 +37,7 @@ namespace Simpleton {
             bool IsLoaded();
             void SetSlot(unsigned char slot);
 
-            bool LoadFile(const char* filePath);
+            bool LoadFile(fs::path filePath);
             bool LoadData(int width, int height, int channelsCount, unsigned char* data);
 
             void Bind() const;

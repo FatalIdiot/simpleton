@@ -69,7 +69,7 @@ namespace Simpleton {
         m_Textures[name] = texture;
     }
 
-    void ResourceManager::AddTexture(const char* name, const char* filePath, unsigned char slot) {
+    void ResourceManager::AddTexture(const char* name, fs::path filePath, unsigned char slot) {
         Texture* newTexture = new Texture(filePath, slot);
         AddTexture(name, newTexture);
     }
@@ -97,7 +97,7 @@ namespace Simpleton {
         m_Sounds[name] = sound;
     }
 
-    void ResourceManager::AddSound(const char* name, const char* filePath) {
+    void ResourceManager::AddSound(const char* name, fs::path filePath) {
         if(m_Sounds[name] != nullptr) {
             delete m_Sounds[name];
             m_Sounds.erase(name);

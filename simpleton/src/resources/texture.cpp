@@ -17,7 +17,7 @@ namespace Simpleton {
         Init(slot);
     }
 
-    Texture::Texture(const char* filePath, unsigned char slot) {
+    Texture::Texture(fs::path filePath, unsigned char slot) {
         Init(slot);
         LoadFile(filePath);
     }
@@ -72,11 +72,11 @@ namespace Simpleton {
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 
-    bool Texture::LoadFile(const char* filePath) {
-        m_Data = stbi_load(filePath, &m_Width, &m_Height, &m_ChannelsCount, 0); 
+    bool Texture::LoadFile(fs::path filePath) {
+        m_Data = stbi_load(filePath.string().c_str(), &m_Width, &m_Height, &m_ChannelsCount, 0); 
 
         if(!m_Data) {
-            LogErr("Failed to load texture data!\nFile path: {}", filePath);
+            LogErr("Failed to load texture data!\nFile path: {}", filePath.string());
             return false;
         }
 
@@ -84,7 +84,7 @@ namespace Simpleton {
 
         GeneralLoad();
 
-        LogMsg("Loaded texture {} from file: {}", m_TextureId, filePath);
+        LogMsg("Loaded texture {} from file: {}", m_TextureId, filePath.string());
         LogMsg("Width: {}, Height: {}, Channels: {}", m_Width, m_Height, m_ChannelsCount);
         m_isLoaded = true;
 

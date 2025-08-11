@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 #define AL_LIBTYPE_STATIC
 #include "AL/al.h"
@@ -16,11 +18,11 @@ namespace Simpleton {
 
         public:
             Sound();
-            Sound(const char* filePath);
+            Sound(fs::path filePath);
             Sound(int format, int freq, int size, void* data);
             ~Sound();
 
-            bool LoadFile(const char* filePath);
+            bool LoadFile(fs::path filePath);
             bool LoadData(int format, int freq, int size, void* data);
 
             unsigned int GetId() const;

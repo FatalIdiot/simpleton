@@ -12,7 +12,7 @@ namespace Simpleton {
         Init();
     }
 
-    Sound::Sound(const char* filePath) {
+    Sound::Sound(fs::path filePath) {
         Init();
         LoadFile(filePath);
     }
@@ -27,8 +27,8 @@ namespace Simpleton {
         alDeleteBuffers(1, &m_SoundId); LogOal();
     }
 
-    bool Sound::LoadFile(const char* filePath) {
-        WavData wavFile = loadWavFile(filePath);
+    bool Sound::LoadFile(fs::path filePath) {
+        WavData wavFile = loadWavFile(filePath.string());
 
         alBufferData(m_SoundId, wavFile.format, wavFile.data.data(), static_cast<int>(wavFile.data.size()), wavFile.frequency);
         

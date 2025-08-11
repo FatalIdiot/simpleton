@@ -1,5 +1,8 @@
 #pragma once
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 #include <map>
 #include <string>
 #include "texture.hpp"
@@ -18,12 +21,12 @@ namespace Simpleton {
         public:
             Texture* GetTexture(const char* name);
             void AddTexture(const char* name, Texture* texture);
-            void AddTexture(const char* name, const char* filePath, unsigned char slot = 0);
+            void AddTexture(const char* name, fs::path filePath, unsigned char slot = 0);
             void AddTexture(const char* name, int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
     
             Sound* GetSound(const char* name);
             void AddSound(const char* name, Sound* sound);
-            void AddSound(const char* name, const char* filePath);
+            void AddSound(const char* name, fs::path filePath);
             void AddSound(const char* name, int format, int freq, int size, void* data);
 
         private:

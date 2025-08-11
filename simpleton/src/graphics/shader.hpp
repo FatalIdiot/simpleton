@@ -1,5 +1,8 @@
 #pragma once
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 namespace Simpleton {
     enum ShaderType {
         VertexShader,
@@ -21,7 +24,7 @@ namespace Simpleton {
             bool CheckProgramValid();
 
             bool AddShaderSource(ShaderType type, const char* code);
-            bool AddShaderFile(ShaderType type, const char* filePath);
+            bool AddShaderFile(ShaderType type, fs::path filePath);
 
             bool Compile();
 

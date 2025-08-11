@@ -64,10 +64,10 @@ namespace Simpleton {
         return true;
     }
 
-    bool Shader::AddShaderFile(ShaderType type, const char* filePath) {
+    bool Shader::AddShaderFile(ShaderType type, fs::path filePath) {
         std::ifstream file(filePath);
         if (!file.is_open()) {
-            LogErr("Error opening shader file: {}", filePath);
+            LogErr("Error opening shader file: {}", filePath.string());
             return false;
         }
 

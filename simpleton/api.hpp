@@ -6,6 +6,8 @@
 #include <map>
 #include <queue>
 #include <string>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 // OpenAL defines
 #define SOUND_FORMAT_MONO8              0x1100
@@ -261,7 +263,7 @@ namespace Simpleton {
             bool CheckProgramValid();
 
             bool AddShaderSource(ShaderType type, const char* code);
-            bool AddShaderFile(ShaderType type, const char* filePath);
+            bool AddShaderFile(ShaderType type, fs::path filePath);
 
             bool Compile();
 
@@ -302,7 +304,7 @@ namespace Simpleton {
 
         public:
             Texture(unsigned char slot = 0);
-            Texture(const char* filePath, unsigned char slot = 0);
+            Texture(fs::path filePath, unsigned char slot = 0);
             Texture(int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
             ~Texture();
 
@@ -310,7 +312,7 @@ namespace Simpleton {
             bool IsLoaded();
             void SetSlot(unsigned char slot);
 
-            bool LoadFile(const char* filePath);
+            bool LoadFile(fs::path filePath);
             bool LoadData(int width, int height, int channelsCount, unsigned char* data);
 
             void Bind() const;
@@ -332,11 +334,11 @@ namespace Simpleton {
 
         public:
             Sound();
-            Sound(const char* filePath);
+            Sound(fs::path filePath);
             Sound(int format, int freq, int size, void* data);
             ~Sound();
 
-            bool LoadFile(const char* filePath);
+            bool LoadFile(fs::path filePath);
             bool LoadData(int format, int freq, int size, void* data);
 
             unsigned int GetId() const;
@@ -389,12 +391,12 @@ namespace Simpleton {
         public:
             Texture* GetTexture(const char* name);
             void AddTexture(const char* name, Texture* texture);
-            void AddTexture(const char* name, const char* filePath, unsigned char slot = 0);
+            void AddTexture(const char* name, fs::path filePath, unsigned char slot = 0);
             void AddTexture(const char* name, int width, int height, int channelsCount, unsigned char* data, unsigned char slot = 0);
     
             Sound* GetSound(const char* name);
             void AddSound(const char* name, Sound* sound);
-            void AddSound(const char* name, const char* filePath);
+            void AddSound(const char* name, fs::path filePath);
             void AddSound(const char* name, int format, int freq, int size, void* data);
 
         private:
