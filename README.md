@@ -61,8 +61,15 @@ You can draw primitives with functions found in the Renderer of the engine. To d
     void FillTriangle(Color color, Point pos1, Point pos2, Point pos3);
     void FillRect(Color color, Rect area);
     void FillCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
+
+    void DrawLine(Color<float> color, Point<int> pointA, Point<int> pointB);
+    void DrawTriangle(Color<float> color, Point<int> pos1, Point<int> pos2, Point<int> pos3);
+    void DrawRect(Color<float> color, Rect<int> area);
+    void DrawCircle(Color<float> color, Circle<int> circle, unsigned short pointsCount = 25);
+
+    void BlitTexture(Texture* texture, Rect<int> destRect, Rect<float> srcRect = {0.0f, 0.0f, 1.0f, 1.0f});
 ```
-For `FillCircle` you can specify the number of points that will form the circle, default is `25`.<br />
+For `FillCircle` and `DrawCircle` you can specify the number of points that will form the circle, default is `25`.<br />
 
 # Entities
 ### Engine
